@@ -1,50 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>4-Digit Password Login</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 2rem;
-    }
-    input {
-      font-size: 1.2rem;
-      width: 100px;
-      padding: 0.3rem;
-    }
-    button {
-      font-size: 1.2rem;
-      padding: 0.3rem 0.6rem;
-    }
-    #message {
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-  </style>
-</head>
-<body>
-  <h2>Enter 4-digit password</h2>
-  <input type="password" id="passwordInput" maxlength="4" pattern="\d{4}" autocomplete="off" />
-  <button onclick="checkPassword()">Login</button>
-  <div id="message"></div>
+const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
 
-  <script>
-    const correctPassword = "2008";
+const app = express();
+const PORT = 3000;
 
-    function checkPassword() {
-      const input = document.getElementById("passwordInput").value;
-      const messageDiv = document.getElementById("message");
+const correctPassword = "2008";
 
-      if (input === correctPassword) {
-        messageDiv.style.color = "green";
-        messageDiv.textContent = "Access Granted!";
-        // Here you can redirect or show protected content
-      } else {
-        messageDiv.style.color = "red";
-        messageDiv.textContent = "Incorrect Password. Try again.";
-      }
-    }
-  </script>
-</body>
-</html>
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// Serve static files (like HTML, CSS)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Handle login POST request
+app.post('/login', (req, res) => {
+  const { password } = req.body;
+  if (password === correctPassword) {
+    res.send('<h2 style="color:green;">Access Granted!</h2>');
+  } else {
+    res.send('<h2 style="color:red;">Incorrect Password. Try again.</h2><a href="/">Back</a>');
+  }
+});
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
