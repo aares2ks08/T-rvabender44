@@ -10,29 +10,15 @@
 
   <hr>
 
-  <!-- Change Password -->
-  <!-- ... keep your existing change password inputs and button here ... -->
-
-  <hr>
-
-  <!-- Change Username -->
-  <!-- ... keep your existing change username inputs and button here ... -->
-
-  <hr style="margin: 1.5rem 0;">
-
   <!-- Log Out -->
   <button onclick="logout()" style="padding:10px 20px; font-size:1.1rem; background:red; color:white; border:none; border-radius:6px; cursor:pointer;">Log Out</button>
 </section>
 
 <script>
+  // Declare params here to read URL parameters
+  const params = new URLSearchParams(window.location.search);
   const currentUser = params.get('user') || 'Anonymous';
-  const storageKey = 'chatAppUsers';
   const picKey = 'chatAppProfilePics';
-
-  // Load profile picture on settings open
-  window.addEventListener('load', () => {
-    loadProfilePic();
-  });
 
   function getProfilePics() {
     return JSON.parse(localStorage.getItem(picKey)) || {};
@@ -47,11 +33,14 @@
     const img = document.getElementById('profilePicPreview');
     if (picData) {
       img.src = picData;
+      img.alt = "Profile Picture";
     } else {
       img.src = '';
       img.alt = "No Profile Picture";
     }
   }
+
+  window.addEventListener('load', loadProfilePic);
 
   function saveProfilePic() {
     const input = document.getElementById('profilePicInput');
@@ -68,15 +57,13 @@
     const reader = new FileReader();
     reader.onload = function(e) {
       let pics = getProfilePics();
-      pics[currentUser] = e.target.result;  // Base64 image string
+      pics[currentUser] = e.target.result;
       saveProfilePics(pics);
       alert("Profile picture saved!");
       loadProfilePic();
     };
     reader.readAsDataURL(file);
   }
-
-  // (Keep your existing password & username change functions here...)
 
   function logout() {
     window.location.href = 'index.html';
