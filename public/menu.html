@@ -1,94 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chat App Menu</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: #f9f9f9;
-      color: #333;
-      box-sizing: border-box;
-    }
-    #menu {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-    #menu button {
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
-    }
-    #menu button:disabled {
-      background-color: #0056b3;
-      cursor: default;
-    }
-    section {
-      display: none;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      min-height: 300px;
-    }
-    section.active {
-      display: block;
-    }
-  </style>
-</head>
+<html>
+<head><title>Menu Test</title></head>
 <body>
-
   <div id="menu">
     <button data-section="chat" disabled>Chat Room</button>
     <button data-section="pictures">Pictures</button>
     <button data-section="settings">Settings</button>
   </div>
-
-  <section id="chat" class="active">
-    <h2>Chat Room</h2>
-    <p>This is your chat room content.</p>
-    <!-- You can embed your chat.html content here or iframe it -->
-  </section>
-
-  <section id="pictures">
-    <h2>Pictures</h2>
-    <p>This is where pictures will be shown.</p>
-  </section>
-
-  <section id="settings">
-    <h2>Settings</h2>
-    <p>Your app settings go here.</p>
-  </section>
-
-  <script>
-    const buttons = document.querySelectorAll('#menu button');
-    const sections = document.querySelectorAll('section');
-
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Enable all buttons first
-        buttons.forEach(b => b.disabled = false);
-        // Disable clicked button
-        button.disabled = true;
-
-        // Hide all sections
-        sections.forEach(section => section.classList.remove('active'));
-        // Show selected section
-        document.getElementById(button.dataset.section).classList.add('active');
-      });
-    });
-  </script>
-
 </body>
 </html>
