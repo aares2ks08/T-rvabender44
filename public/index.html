@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Two Buttons Currency Game</title>
+  <title>Three Buttons Currency Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     html, body {
@@ -52,7 +52,7 @@
     }
     #double-btn {
       position: fixed;
-      left: 50%;
+      left: 35%;
       bottom: 40px;
       transform: translateX(-50%);
       width: 90px;
@@ -71,6 +71,27 @@
     #double-btn:active {
       background: #16a34a;
     }
+    #rebirth-btn {
+      position: fixed;
+      left: 65%;
+      bottom: 40px;
+      transform: translateX(-50%);
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #f59e42;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      font-size: 1.1rem;
+      color: white;
+      transition: background 0.2s;
+      outline: none;
+      z-index: 10;
+    }
+    #rebirth-btn:active {
+      background: #d97706;
+    }
     #msg {
       color: #e11d48;
       font-size: 1.1rem;
@@ -86,24 +107,33 @@
   <div class="center-container">
     <button id="main-btn">+1</button>
   </div>
-  <button id="double-btn">2x (20)</button>
+  <button id="double-btn">2x (10)</button>
+  <button id="rebirth-btn">Rebirth (50)</button>
   <div id="msg"></div>
   <script>
     let currency = 0;
-    let doubleBtnCost = 20;
-
+    let mainBtnBase = 1;            // base value per click, increases by 0.2 per rebirth
+    let mainBtnMultiplier = 1;      // 2x if 2x button clicked, always reset to 1 on rebirth
+    let doubleBtnCost = 10;         // Start at 10, reset to 10 after rebirth
+    let rebirthBtnCost = 50;
+    let rebirths = 0;
+    
     const counter = document.getElementById('currency-counter');
     const msg = document.getElementById('msg');
     const mainBtn = document.getElementById('main-btn');
     const doubleBtn = document.getElementById('double-btn');
+    const rebirthBtn = document.getElementById('rebirth-btn');
 
     function updateCounter() {
-      counter.textContent = 'Currency: ' + currency;
+      counter.textContent = 'Currency: ' + currency.toFixed(2);
+      mainBtn.textContent = `+${(mainBtnBase * mainBtnMultiplier).toFixed(2)}`;
       doubleBtn.textContent = `2x (${doubleBtnCost})`;
+      rebirthBtn.textContent = `Rebirth (${rebirthBtnCost})`;
     }
 
     mainBtn.addEventListener('click', function() {
-      currency += 1;
+      currency += mainBtnBase * mainBtnMultiplier;
+      currency = Math.round(currency * 100) / 100;
       updateCounter();
       msg.textContent = "";
     });
@@ -113,10 +143,26 @@
         currency -= doubleBtnCost;
         currency *= 2;
         doubleBtnCost += 10;
+        mainBtnMultiplier = 2;
         updateCounter();
         msg.textContent = "";
       } else {
         msg.textContent = "Not enough currency!";
+      }
+    });
+
+    rebirthBtn.addEventListener('click', function() {
+      if (currency >= rebirthBtnCost) {
+        currency -= rebirthBtnCost;
+        rebirthBtnCost += 50;
+        rebirths += 1;
+        mainBtnBase = 1 + rebirths * 0.2;
+        mainBtnMultiplier = 1; // Reset any double from 2x button
+        doubleBtnCost = 10;    // Reset 2x button cost to 10
+        updateCounter();
+        msg.textContent = `Rebirth complete! New base: +${mainBtnBase.toFixed(2)} per click.`;
+      } else {
+        msg.textContent = "Not enough currency for rebirth!";
       }
     });
 
