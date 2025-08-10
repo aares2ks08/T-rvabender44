@@ -113,7 +113,7 @@
   <script>
     let currency = 0;
     let mainBtnBase = 1;            // base value per click, increases by 0.2 per rebirth
-    let mainBtnMultiplier = 1;      // 2x if 2x button clicked, always reset to 1 on rebirth
+    let mainBtnMultiplier = 1;      // Doubled by double button, reset to 1 on rebirth
     let doubleBtnCost = 10;         // Start at 10, reset to 10 after rebirth
     let rebirthBtnCost = 50;
     let rebirths = 0;
@@ -141,9 +141,8 @@
     doubleBtn.addEventListener('click', function() {
       if (currency >= doubleBtnCost) {
         currency -= doubleBtnCost;
-        currency *= 2;
+        mainBtnMultiplier *= 2;
         doubleBtnCost += 10;
-        mainBtnMultiplier = 2;
         updateCounter();
         msg.textContent = "";
       } else {
@@ -157,10 +156,11 @@
         rebirthBtnCost += 50;
         rebirths += 1;
         mainBtnBase = 1 + rebirths * 0.2;
-        mainBtnMultiplier = 1; // Reset any double from 2x button
+        mainBtnMultiplier = 1; // Reset multiplier
         doubleBtnCost = 10;    // Reset 2x button cost to 10
+        currency = 0;          // Reset currency to 0
         updateCounter();
-        msg.textContent = `Rebirth complete! New base: +${mainBtnBase.toFixed(2)} per click.`;
+        msg.textContent = `Rebirth complete! New base: +${mainBtnBase.toFixed(2)} per click. Currency reset!`;
       } else {
         msg.textContent = "Not enough currency for rebirth!";
       }
