@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Round Button with Counter</title>
+  <title>Double Currency Button</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     html, body {
@@ -23,41 +23,66 @@
       align-items: center;
       justify-content: center;
     }
-    #click-counter {
+    #currency-counter {
       font-size: 2rem;
       font-weight: bold;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       color: #222;
       user-select: none;
     }
-    #currency-btn {
-      width: 80px;
-      height: 80px;
+    #double-btn {
+      width: 100px;
+      height: 100px;
       border-radius: 50%;
-      background: #3b82f6;
+      background: #22c55e;
       border: none;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      font-size: 1.2rem;
+      color: white;
+      margin-bottom: 10px;
       transition: background 0.2s;
     }
-    #currency-btn:active {
-      background: #2563eb;
+    #double-btn:active {
+      background: #16a34a;
+    }
+    #msg {
+      color: #e11d48;
+      font-size: 1.1rem;
+      height: 1.5em;
+      margin-top: 10px;
+      min-height: 1.5em;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="click-counter">0</div>
-    <button id="currency-btn"></button>
+    <div id="currency-counter">Currency: 20</div>
+    <button id="double-btn">2x (20)</button>
+    <div id="msg"></div>
   </div>
   <script>
-    let currency = 0;
-    const counter = document.getElementById("click-counter");
-    const button = document.getElementById("currency-btn");
-    button.addEventListener("click", function() {
-      currency += 1;
-      counter.textContent = currency;
+    let currency = 20; // start with 20 so you can try the button
+    const counter = document.getElementById('currency-counter');
+    const doubleBtn = document.getElementById('double-btn');
+    const msg = document.getElementById('msg');
+
+    function updateDisplay() {
+      counter.textContent = 'Currency: ' + currency;
+    }
+
+    doubleBtn.addEventListener('click', function() {
+      if (currency >= 20) {
+        currency -= 20;
+        currency *= 2;
+        updateDisplay();
+        msg.textContent = "";
+      } else {
+        msg.textContent = "Not enough currency!";
+      }
     });
+
+    updateDisplay();
   </script>
 </body>
 </html>
