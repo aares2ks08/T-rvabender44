@@ -1,10 +1,18 @@
-app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  console.log(`Login attempt: user='${username}', pass='${password}'`);
+// index.js
+const express = require('express');
+const path = require('path');
 
-  if (users[username] && users[username] === password) {
-    res.redirect(`/chat.html?user=${encodeURIComponent(username)}`);
-  } else {
-    res.send('Invalid username or password. <a href="/">Try again</a>');
-  }
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files from the "public" directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Fallback route: serve index.html for any unknown routes (for SPA support)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running at http://localhost:${PORT}`);
 });
