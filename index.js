@@ -173,48 +173,4 @@
       />
       <button type="submit">Enter</button>
     </form>
-    <div id="message"></div>
-  </div>
-
-  <audio id="successSound" src="https://cdn.pixabay.com/download/audio/2022/03/04/audio_091182c4de.mp3?filename=success-fanfare-trumpets-6185.mp3"></audio>
-  <audio id="errorSound" src="https://cdn.pixabay.com/download/audio/2022/03/17/audio_8f27ad0a8a.mp3?filename=error-126551.mp3"></audio>
-
-  <script>
-    const form = document.getElementById('passwordForm');
-    const input = document.getElementById('password');
-    const message = document.getElementById('message');
-    const successSound = document.getElementById('successSound');
-    const errorSound = document.getElementById('errorSound');
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const val = input.value.trim();
-      if (val === "2008") {
-        message.style.color = '#4fff87';
-        message.textContent = "Access Granted! 🎉";
-        successSound.play();
-        form.classList.remove('shake');
-        form.classList.add('success');
-        input.value = '';
-      } else {
-        message.style.color = '#ff5577';
-        message.textContent = "Incorrect Password! Try again.";
-        errorSound.play();
-        form.classList.remove('success');
-        form.classList.add('shake');
-        setTimeout(() => form.classList.remove('shake'), 400);
-        input.value = '';
-        input.focus();
-      }
-    });
-
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        form.dispatchEvent(new Event('submit'));
-      }
-    });
-  </script>
-
-</body>
-</html>
+    <div id="message
