@@ -5,176 +5,24 @@
   <title>Three Buttons Currency Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      background: #18181b;
-      position: relative;
-    }
-    #currency-row {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      margin-top: 40px; /* Increased for more space above */
-    }
-    #perm-multiplier {
-      position: absolute;
-      right: 30px;
-      font-size: 1.6rem;
-      color: #fff;
-      text-shadow: 0 0 8px #0ff, 0 0 8px #ff0;
-      font-weight: bold;
-      top: 50%;
-      transform: translateY(-50%);
-    }
-    #currency-counter {
-      font-size: 1.5rem;
-      font-weight: bold;
-      color: #fff;
-      user-select: none;
-      text-shadow: 0 0 12px #0ff, 0 0 16px #fff;
-      margin: 48px auto 0 auto; /* More margin-top to move down */
-      display: block;
-    }
-    #luck-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      width: 72px;
-      height: 72px;
-      background: linear-gradient(135deg, #fcff54 0%, #ff00cc 100%);
-      border: 2px solid #fff;
-      border-radius: 14px;
-      box-shadow: 0 0 16px #ff0, 0 0 32px #ff00cc;
-      color: #222;
-      font-size: 1.6rem;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 20;
-      transition: box-shadow 0.2s, transform 0.1s;
-      outline: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-shadow: 0 0 8px #fff, 0 0 2px #fcff54;
-      flex-direction: column;
-      padding: 0;
-    }
-    #luck-btn span {
-      font-size: 1em;
-      font-weight: normal;
-      color: #222;
-      text-shadow: none;
-    }
-    #luck-btn:active {
-      box-shadow: 0 0 32px #fff, 0 0 60px #f0f;
-      transform: scale(0.96);
-    }
-    .center-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
-    #main-btn {
-      width: 280px;        /* Much bigger */
-      height: 280px;
-      border-radius: 50%;
-      border: none;
-      cursor: pointer;
-      font-size: 2.6rem;   /* Bigger text */
-      color: #fff;
-      outline: none;
-      font-weight: bold;
-      box-shadow:
-        0 0 32px #fff,
-        0 0 64px #0ff,
-        0 0 128px #f0f,
-        0 0 256px #ff0;
-      background: linear-gradient(270deg, #ff00cc, #3333ff, #00ff99, #ffff00, #ff6600, #ff0033, #ff00cc);
-      background-size: 1400% 1400%;
-      animation: rainbow 6s linear infinite;
-      transition: box-shadow 0.2s;
-    }
-    #main-btn:active {
-      box-shadow:
-        0 0 60px #fff,
-        0 0 120px #0ff,
-        0 0 240px #f0f,
-        0 0 340px #ff0;
-    }
-    @keyframes rainbow {
-      0% {background-position:0% 50%;}
-      50% {background-position:100% 50%;}
-      100% {background-position:0% 50%;}
-    }
-    #double-btn {
-      position: fixed;
-      left: 35%;
-      bottom: 60px;
-      transform: translateX(-50%);
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #22c55e;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 32px #1dffb0, 0 0 16px #000;
-      font-size: 1.7rem;
-      color: white;
-      transition: background 0.2s;
-      outline: none;
-      z-index: 10;
-    }
-    #double-btn:active {
-      background: #16a34a;
-    }
-    #rebirth-btn {
-      position: fixed;
-      left: 65%;
-      bottom: 60px;
-      transform: translateX(-50%);
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: #f59e42;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 32px #ffb300, 0 0 16px #000;
-      font-size: 1.7rem;
-      color: white;
-      transition: background 0.2s;
-      outline: none;
-      z-index: 10;
-    }
-    #rebirth-btn:active {
-      background: #d97706;
-    }
-    #msg {
-      color: #e11d48;
-      font-size: 1.1rem;
-      height: 1.5em;
-      margin-bottom: 0.5em;
-      min-height: 1.5em;
-      text-align: center;
-    }
-    @media (max-width: 800px) {
-      #perm-multiplier { right: 10px; font-size: 1.2rem; }
-      #luck-btn { top: 5px; left: 5px; width: 54px; height: 54px; font-size: 1.2rem;}
-      #main-btn, #double-btn, #rebirth-btn { width: 90px; height: 90px; font-size: 1.2rem;}
-    }
+    html, body { height: 100%; margin: 0; padding: 0; box-sizing: border-box; }
+    body { min-height: 100vh; display:flex; flex-direction:column; justify-content:space-between; align-items:center; background:#18181b; position:relative; }
+    #currency-row { width:100%; display:flex; align-items:center; justify-content:center; position:relative; margin-top:40px; }
+    #perm-multiplier { position:absolute; right:30px; font-size:1.6rem; color:#fff; text-shadow:0 0 8px #0ff, 0 0 8px #ff0; font-weight:bold; top:50%; transform:translateY(-50%); }
+    #currency-counter { font-size:1.5rem; font-weight:bold; color:#fff; user-select:none; text-shadow:0 0 12px #0ff, 0 0 16px #fff; margin:48px auto 0 auto; display:block; }
+    #luck-btn { position:absolute; top:10px; left:10px; width:72px; height:72px; background:linear-gradient(135deg,#fcff54 0%,#ff00cc 100%); border:2px solid #fff; border-radius:14px; box-shadow:0 0 16px #ff0,0 0 32px #ff00cc; color:#222; font-size:1.6rem; font-weight:bold; cursor:pointer; z-index:20; transition:box-shadow 0.2s, transform 0.1s; outline:none; display:flex; align-items:center; justify-content:center; text-shadow:0 0 8px #fff,0 0 2px #fcff54; flex-direction:column; padding:0; }
+    #luck-btn span { font-size:1em; font-weight:normal; color:#222; text-shadow:none; }
+    #luck-btn:active { box-shadow:0 0 32px #fff,0 0 60px #f0f; transform:scale(0.96); }
+    .center-container { flex:1; display:flex; align-items:center; justify-content:center; width:100%; }
+    #main-btn { width:280px; height:280px; border-radius:50%; border:none; cursor:pointer; font-size:2.6rem; color:#fff; outline:none; font-weight:bold; box-shadow:0 0 32px #fff,0 0 64px #0ff,0 0 128px #f0,0 0 256px #ff0; background:linear-gradient(270deg,#ff00cc,#3333ff,#00ff99,#ffff00,#ff6600,#ff0033,#ff00cc); background-size:1400% 1400%; animation:rainbow 6s linear infinite; transition:box-shadow 0.2s; }
+    #main-btn:active { box-shadow:0 0 60px #fff,0 0 120px #0ff,0 0 240px #f0,0 0 340px #ff0; }
+    @keyframes rainbow { 0% {background-position:0% 50%;} 50% {background-position:100% 50%;} 100% {background-position:0% 50%;} }
+    #double-btn { position:fixed; left:35%; bottom:60px; transform:translateX(-50%); width:140px; height:140px; border-radius:50%; background:#22c55e; border:none; cursor:pointer; box-shadow:0 4px 32px #1dffb0,0 0 16px #000; font-size:1.7rem; color:white; transition:background 0.2s; outline:none; z-index:10; }
+    #double-btn:active { background:#16a34a; }
+    #rebirth-btn { position:fixed; left:65%; bottom:60px; transform:translateX(-50%); width:140px; height:140px; border-radius:50%; background:#f59e42; border:none; cursor:pointer; box-shadow:0 4px 32px #ffb300,0 0 16px #000; font-size:1.7rem; color:white; transition:background 0.2s; outline:none; z-index:10; }
+    #rebirth-btn:active { background:#d97706; }
+    #msg { color:#e11d48; font-size:1.1rem; height:1.5em; margin-bottom:0.5em; min-height:1.5em; text-align:center; }
+    @media (max-width:800px) { #perm-multiplier { right:10px; font-size:1.2rem; } #luck-btn { top:5px; left:5px; width:54px; height:54px; font-size:1.2rem; } #main-btn, #double-btn, #rebirth-btn { width:90px; height:90px; font-size:1.2rem; } }
   </style>
 </head>
 <body>
@@ -184,7 +32,7 @@
       <span id="luck-cost">500</span>
     </button>
     <span id="currency-counter">Currency: 0</span>
-    <span id="perm-multiplier">Perm x1.00</span>
+    <span id="perm-multiplier">Perm x1.10</span>
   </div>
   <div class="center-container">
     <button id="main-btn">+1</button>
@@ -192,22 +40,20 @@
   <button id="double-btn">2x (10)</button>
   <button id="rebirth-btn">Rebirth (50)</button>
   <div id="msg"></div>
-  <!-- Audio Elements for button sounds -->
   <audio id="main-sound" src="main.mp3"></audio>
   <audio id="double-sound" src="double.mp3"></audio>
   <audio id="rebirth-sound" src="rebirth.mp3"></audio>
   <audio id="luck-sound" src="https://cdn.pixabay.com/audio/2023/03/16/audio_128b8c7b0c.mp3"></audio>
   <script>
     let currency = 0;
-    let permMultiplier = 1;         // Permanent multiplier, multiplies all main button earnings
-    let mainBtnBase = 1;            // base value per click, increases by 0.2 per rebirth
-    let mainBtnMultiplier = 1;      // Doubled by double button, reset to 1 on rebirth
-    let doubleBtnCost = 10;         // Start at 10, reset to 10 after rebirth
+    let permMultiplier = 1.10;
+    let mainBtnBase = 1;
+    let mainBtnMultiplier = 1;
+    let doubleBtnCost = 10;
     let rebirthBtnCost = 50;
     let rebirths = 0;
-    let luckBtnCost = 500; // Start at 500, +500 each use
-    
-    // Audio elements
+    let luckBtnCost = 500;
+
     const mainSound = document.getElementById('main-sound');
     const doubleSound = document.getElementById('double-sound');
     const rebirthSound = document.getElementById('rebirth-sound');
@@ -236,9 +82,7 @@
       currency = Math.round(currency * 100) / 100;
       updateCounter();
       msg.textContent = "";
-      // Play sound
-      mainSound.currentTime = 0;
-      mainSound.play();
+      if (mainSound) { mainSound.currentTime = 0; mainSound.play().catch(()=>{}); }
     });
 
     doubleBtn.addEventListener('click', function() {
@@ -248,8 +92,7 @@
         doubleBtnCost += 10;
         updateCounter();
         msg.textContent = "";
-        doubleSound.currentTime = 0;
-        doubleSound.play();
+        if (doubleSound) { doubleSound.currentTime = 0; doubleSound.play().catch(()=>{}); }
       } else {
         msg.textContent = "Not enough currency!";
       }
@@ -261,13 +104,12 @@
         rebirthBtnCost += 50;
         rebirths += 1;
         mainBtnBase = 1 + rebirths * 0.2;
-        mainBtnMultiplier = 1; // Reset multiplier
-        doubleBtnCost = 10;    // Reset 2x button cost to 10
-        currency = 0;          // Reset currency to 0
+        mainBtnMultiplier = 1;
+        doubleBtnCost = 10;
+        currency = 0;
         updateCounter();
         msg.textContent = `Rebirth complete! New base: +${mainBtnBase.toFixed(2)} per click. Currency reset!`;
-        rebirthSound.currentTime = 0;
-        rebirthSound.play();
+        if (rebirthSound) { rebirthSound.currentTime = 0; rebirthSound.play().catch(()=>{}); }
       } else {
         msg.textContent = "Not enough currency for rebirth!";
       }
@@ -276,24 +118,22 @@
     luckBtn.addEventListener('click', function() {
       if (currency >= luckBtnCost) {
         currency -= luckBtnCost;
-        // Cost increases after use
         luckBtnCost += 500;
         let rolled;
-        // 1% chance for super rare (30x - 100x), otherwise (0.5x - 30x)
-        if (Math.random() < 0.01) {
-          rolled = 30 + Math.random() * 70; // 30x to 100x
+        // Rare: 2% chance, smaller range
+        if (Math.random() < 0.02) {
+          rolled = 15 + Math.random() * 25; // 15x to 40x
           rolled = Math.round(rolled * 100) / 100;
           msg.textContent = `🎉 INCREDIBLE LUCK! Permanent multiplier +${rolled.toFixed(2)}x!`;
         } else {
-          rolled = 0.5 + Math.random() * (30 - 0.5); // 0.5x to 30x
+          rolled = 0.5 + Math.random() * (8 - 0.5); // 0.5x to 8x
           rolled = Math.round(rolled * 100) / 100;
           msg.textContent = `You gained a permanent multiplier of +${rolled.toFixed(2)}x!`;
         }
         permMultiplier += rolled;
         permMultiplier = Math.round(permMultiplier * 100) / 100;
         updateCounter();
-        luckSound.currentTime = 0;
-        luckSound.play();
+        if (luckSound) { luckSound.currentTime = 0; luckSound.play().catch(()=>{}); }
       } else {
         msg.textContent = "Not enough currency for luck boost!";
       }
