@@ -1,16 +1,10 @@
-const express = require('express');
-const path = require('path');
-const app = express();
-const PORT = 3000;
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  console.log(`Login attempt: user='${username}', pass='${password}'`);
 
-// Serve static files from 'public' folder (optional, if you have other assets)
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Serve your custom HTML on root or custom route
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public-fourdigit-password.html'));
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  if (users[username] && users[username] === password) {
+    res.redirect(`/chat.html?user=${encodeURIComponent(username)}`);
+  } else {
+    res.send('Invalid username or password. <a href="/">Try again</a>');
+  }
 });
