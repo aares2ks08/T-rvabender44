@@ -3,59 +3,128 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Simple Menu Test</title>
+  <title>Chat Room</title>
   <style>
-    #menu button {
-      margin: 5px;
-      padding: 10px 20px;
-      cursor: pointer;
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      box-sizing: border-box;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    section {
-      display: none;
+    h2 {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: #222;
+    }
+    #usernameDisplay {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      color: #555;
+    }
+    #messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      background: white;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 1.2rem;
+      line-height: 1.4;
+    }
+    #messages div {
+      margin-bottom: 1rem;
+      word-wrap: break-word;
+    }
+    #messages img {
+      max-width: 100%;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    form {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    #messageInput {
+      flex-grow: 1;
+      padding: 14px 16px;
+      font-size: 1.3rem;
+      border-radius: 8px;
       border: 1px solid #ccc;
-      padding: 20px;
-      margin-top: 10px;
+      outline: none;
     }
-    section.active {
-      display: block;
+    button {
+      padding: 14px 24px;
+      font-size: 1.3rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <div id="menu">
-    <button data-section="chat">Chat Room</button>
-    <button data-section="pictures">Pictures</button>
-    <button data-section="settings">Settings</button>
-  </div>
+  <h2>Chat Room</h2>
+  <div id="usernameDisplay"></div>
+  <div id="messages"></div>
 
-  <section id="chat" class="active">
-    <div id="messages" style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;"></div>
+  <form id="messageForm">
+    <input id="messageInput" autocomplete="off" placeholder="Type your message..." />
+    <button type="submit">Send</button>
+  </form>
 
-    <form id="messageForm">
-      <input id="messageInput" autocomplete="off" placeholder="Type your message..." style="width: 80%; padding: 10px;" />
-      <button type="submit" class="send">Send</button>
-    </form>
-  </section>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="image" required />
+    <button type="submit">Upload Image</button>
+  </form>
 
-  <section id="pictures">This is the Pictures section.</section>
-  <section id="settings">This is the Settings section.</section>
-
+  <script src="/socket.io/socket.io.js"></script>
   <script>
-    const buttons = document.querySelectorAll('#menu button');
-    const sections = document.querySelectorAll('section');
+    const socket = io();
 
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        sections.forEach(s => s.classList.remove('active'));
-        document.getElementById(btn.dataset.section).classList.add('active');
+    const params = new URLSearchParams(window.location.search);
+    const user = params.get('user') || 'Anonymous';
+    document.getElementById('usernameDisplay').textContent = `User: ${user}`;
 
-        buttons.forEach(b => b.disabled = false);
-        btn.disabled = true; // Disable active button for clarity
-      });
+    const messages = document.getElementById('messages');
+    const form = document.getElementById('messageForm');
+    const input = document.getElementById('messageInput');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (input.value.trim()) {
+        socket.emit('chat message', { user, text: input.value.trim() });
+        input.value = '';
+      }
     });
 
-    // Disable the first button initially (Chat active)
-    buttons[0].disabled = true;
+    socket.on('chat message', msg => {
+      const div = document.createElement('div');
+      if (msg.text.startsWith('/uploads/')) {
+        div.innerHTML = `<strong>${msg.user}:</strong><br><img src="${msg.text}" alt="uploaded image" />`;
+      } else {
+        div.textContent = `${msg.user}: ${msg.text}`;
+      }
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    });
   </script>
 </body>
 </html>
