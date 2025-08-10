@@ -20,13 +20,65 @@
       background: #18181b;
       position: relative;
     }
+    #currency-row {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-top: 10px;
+    }
+    #perm-multiplier {
+      position: absolute;
+      right: 30px;
+      font-size: 1.1rem;
+      color: #fff;
+      text-shadow: 0 0 8px #0ff, 0 0 8px #ff0;
+      font-weight: bold;
+      top: 50%;
+      transform: translateY(-50%);
+    }
     #currency-counter {
       font-size: 2rem;
       font-weight: bold;
-      margin-top: 40px;
       color: #fff;
       user-select: none;
       text-shadow: 0 0 12px #0ff, 0 0 16px #fff;
+      margin: 0 auto;
+    }
+    #luck-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #fcff54 0%, #ff00cc 100%);
+      border: 2px solid #fff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ff0, 0 0 20px #ff00cc;
+      color: #222;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 20;
+      transition: box-shadow 0.2s, transform 0.1s;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 0 0 8px #fff, 0 0 2px #fcff54;
+      flex-direction: column;
+      padding: 0;
+    }
+    #luck-btn span {
+      font-size: 0.8em;
+      font-weight: normal;
+      color: #222;
+      text-shadow: none;
+    }
+    #luck-btn:active {
+      box-shadow: 0 0 28px #fff, 0 0 40px #f0f;
+      transform: scale(0.96);
     }
     .center-container {
       flex: 1;
@@ -119,10 +171,22 @@
       min-height: 1.5em;
       text-align: center;
     }
+    @media (max-width: 600px) {
+      #perm-multiplier { right: 10px; font-size: 1rem; }
+      #luck-btn { top: 5px; left: 5px; width: 40px; height: 40px; font-size: 1rem;}
+      #main-btn, #double-btn, #rebirth-btn { width: 70px; height: 70px; font-size: 1rem;}
+    }
   </style>
 </head>
 <body>
-  <div id="currency-counter">Currency: 0</div>
+  <div id="currency-row">
+    <button id="luck-btn" title="Gamble for a huge permanent multiplier!">
+      🎲
+      <span id="luck-cost">500</span>
+    </button>
+    <span id="currency-counter">Currency: 0</span>
+    <span id="perm-multiplier">Perm x1.00</span>
+  </div>
   <div class="center-container">
     <button id="main-btn">+1</button>
   </div>
@@ -133,34 +197,43 @@
   <audio id="main-sound" src="main.mp3"></audio>
   <audio id="double-sound" src="double.mp3"></audio>
   <audio id="rebirth-sound" src="rebirth.mp3"></audio>
+  <audio id="luck-sound" src="https://cdn.pixabay.com/audio/2023/03/16/audio_128b8c7b0c.mp3"></audio>
   <script>
     let currency = 0;
+    let permMultiplier = 1;         // Permanent multiplier, multiplies all main button earnings
     let mainBtnBase = 1;            // base value per click, increases by 0.2 per rebirth
     let mainBtnMultiplier = 1;      // Doubled by double button, reset to 1 on rebirth
     let doubleBtnCost = 10;         // Start at 10, reset to 10 after rebirth
     let rebirthBtnCost = 50;
     let rebirths = 0;
-
+    let luckBtnCost = 500; // Start at 500, +500 each use
+    
     // Audio elements
     const mainSound = document.getElementById('main-sound');
     const doubleSound = document.getElementById('double-sound');
     const rebirthSound = document.getElementById('rebirth-sound');
+    const luckSound = document.getElementById('luck-sound');
 
     const counter = document.getElementById('currency-counter');
+    const permMult = document.getElementById('perm-multiplier');
     const msg = document.getElementById('msg');
     const mainBtn = document.getElementById('main-btn');
     const doubleBtn = document.getElementById('double-btn');
     const rebirthBtn = document.getElementById('rebirth-btn');
+    const luckBtn = document.getElementById('luck-btn');
+    const luckCost = document.getElementById('luck-cost');
 
     function updateCounter() {
       counter.textContent = 'Currency: ' + currency.toFixed(2);
-      mainBtn.textContent = `+${(mainBtnBase * mainBtnMultiplier).toFixed(2)}`;
+      mainBtn.textContent = `+${(mainBtnBase * mainBtnMultiplier * permMultiplier).toFixed(2)}`;
       doubleBtn.textContent = `2x (${doubleBtnCost})`;
       rebirthBtn.textContent = `Rebirth (${rebirthBtnCost})`;
+      permMult.textContent = `Perm x${permMultiplier.toFixed(2)}`;
+      luckCost.textContent = luckBtnCost;
     }
 
     mainBtn.addEventListener('click', function() {
-      currency += mainBtnBase * mainBtnMultiplier;
+      currency += mainBtnBase * mainBtnMultiplier * permMultiplier;
       currency = Math.round(currency * 100) / 100;
       updateCounter();
       msg.textContent = "";
@@ -198,6 +271,32 @@
         rebirthSound.play();
       } else {
         msg.textContent = "Not enough currency for rebirth!";
+      }
+    });
+
+    luckBtn.addEventListener('click', function() {
+      if (currency >= luckBtnCost) {
+        currency -= luckBtnCost;
+        // Cost increases after use
+        luckBtnCost += 500;
+        let rolled;
+        // 1% chance for super rare (30x - 100x), otherwise (0.5x - 30x)
+        if (Math.random() < 0.01) {
+          rolled = 30 + Math.random() * 70; // 30x to 100x
+          rolled = Math.round(rolled * 100) / 100;
+          msg.textContent = `🎉 INCREDIBLE LUCK! Permanent multiplier +${rolled.toFixed(2)}x!`;
+        } else {
+          rolled = 0.5 + Math.random() * (30 - 0.5); // 0.5x to 30x
+          rolled = Math.round(rolled * 100) / 100;
+          msg.textContent = `You gained a permanent multiplier of +${rolled.toFixed(2)}x!`;
+        }
+        permMultiplier += rolled;
+        permMultiplier = Math.round(permMultiplier * 100) / 100;
+        updateCounter();
+        luckSound.currentTime = 0;
+        luckSound.play();
+      } else {
+        msg.textContent = "Not enough currency for luck boost!";
       }
     });
 
