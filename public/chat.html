@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Room</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 1em; }
+    #messages { border: 1px solid #ccc; height: 300px; overflow-y: scroll; padding: 0.5em; }
+    #messages div { margin-bottom: 0.5em; }
+    img { max-width: 200px; display: block; margin-top: 0.3em; }
+  </style>
+</head>
+<body>
+  <h2>Chat Room</h2>
+  <p>User: <span id="username"></span></p>
+
+  <div id="messages"></div>
+
+  <form id="message-form">
+    <input id="message-input" autocomplete="off" placeholder="Type message..." />
+    <button type="submit">Send</button>
+  </form>
+
+  <form action="/upload" method="POST" enctype="multipart/form-data" style="margin-top: 1em;">
+    <input type="file" name="image" required />
+    <button type="submit">Upload Image</button>
+  </form>
+
+  <script>
+    const socket = io();
+    const params = new URLSearchParams(window.location.search);
+    const user = params.get('user') || 'Anonymous';
+    document.getElementById('username').textContent = user;
+
+    const messages = document.getElementById('messages');
+    const form = document.getElementById('message-form');
+    const input = document.getElementById('message-input');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (input.value.trim()) {
+        socket.emit('chat message', { user, text: input.value.trim() });
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', msg => {
+      const div = document.createElement('div');
+      if (msg.text.startsWith('/uploads/')) {
+        div.innerHTML = `<strong>${msg.user}:</strong><br><img src="${msg.text}" alt="uploaded image" />`;
+      } else {
+        div.textContent = `${msg.user}: ${msg.text}`;
+      }
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    });
+  </script>
+</body>
+</html>
