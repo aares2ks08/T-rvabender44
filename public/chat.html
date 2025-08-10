@@ -1,71 +1,91 @@
-<section id="settings">
-  <h2>Settings</h2>
-  <p>Manage your account below.</p>
-
-  <!-- Profile Picture -->
-  <h3>Profile Picture</h3>
-  <img id="profilePicPreview" src="" alt="No Profile Picture" style="width:100px; height:100px; object-fit:cover; border-radius:50%; border:1px solid #ccc; display:block; margin-bottom:10px;">
-  <input type="file" id="profilePicInput" accept="image/*"><br><br>
-  <button onclick="saveProfilePic()">Save Profile Picture</button>
-
-  <hr>
-
-  <!-- Log Out -->
-  <button onclick="logout()" style="padding:10px 20px; font-size:1.1rem; background:red; color:white; border:none; border-radius:6px; cursor:pointer;">Log Out</button>
-</section>
-
-<script>
-  // Declare params here to read URL parameters
-  const params = new URLSearchParams(window.location.search);
-  const currentUser = params.get('user') || 'Anonymous';
-  const picKey = 'chatAppProfilePics';
-
-  function getProfilePics() {
-    return JSON.parse(localStorage.getItem(picKey)) || {};
-  }
-  function saveProfilePics(pics) {
-    localStorage.setItem(picKey, JSON.stringify(pics));
-  }
-
-  function loadProfilePic() {
-    const pics = getProfilePics();
-    const picData = pics[currentUser];
-    const img = document.getElementById('profilePicPreview');
-    if (picData) {
-      img.src = picData;
-      img.alt = "Profile Picture";
-    } else {
-      img.src = '';
-      img.alt = "No Profile Picture";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chat App Menu</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #f9f9f9;
+      color: #333;
+      box-sizing: border-box;
     }
-  }
-
-  window.addEventListener('load', loadProfilePic);
-
-  function saveProfilePic() {
-    const input = document.getElementById('profilePicInput');
-    if (!input.files || !input.files[0]) {
-      alert("Please select an image first.");
-      return;
+    #menu {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
-    const file = input.files[0];
-    if (!file.type.startsWith('image/')) {
-      alert("Only image files are allowed.");
-      return;
+    #menu button {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
     }
+    #menu button.active {
+      background-color: #0056b3;
+      cursor: default;
+    }
+    section {
+      display: none;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-height: 300px;
+    }
+    section.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      let pics = getProfilePics();
-      pics[currentUser] = e.target.result;
-      saveProfilePics(pics);
-      alert("Profile picture saved!");
-      loadProfilePic();
-    };
-    reader.readAsDataURL(file);
-  }
+  <div id="menu">
+    <button data-section="chat" class="active">Chat Room</button>
+    <button data-section="pictures">Pictures</button>
+    <button data-section="settings">Settings</button>
+  </div>
 
-  function logout() {
-    window.location.href = 'index.html';
-  }
-</script>
+  <section id="chat" class="active">
+    <h2>Chat Room</h2>
+    <p>Put your chat room content here or load chat.html with iframe.</p>
+  </section>
+
+  <section id="pictures">
+    <h2>Pictures</h2>
+    <p>This is where pictures will be shown.</p>
+  </section>
+
+  <section id="settings">
+    <h2>Settings</h2>
+    <p>Your app settings go here.</p>
+  </section>
+
+  <script>
+    const buttons = document.querySelectorAll('#menu button');
+    const sections = document.querySelectorAll('section');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons and sections
+        buttons.forEach(b => b.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+
+        // Add active class to clicked button and related section
+        button.classList.add('active');
+        document.getElementById(button.dataset.section).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
