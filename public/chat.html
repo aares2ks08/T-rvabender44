@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chat Room</title>
+  <title>Chat App with Menu</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,27 +12,48 @@
       padding: 1rem;
       background: #f9f9f9;
       color: #333;
-      display: flex;
-      flex-direction: column;
-      height: 90vh;
       box-sizing: border-box;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
-    h2 {
-      font-size: 2.8rem;
+    #menu {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
       margin-bottom: 1rem;
-      text-align: center;
-      color: #222;
     }
-    #usernameDisplay {
+    #menu button {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border: none;
+      background-color: #007bff;
+      color: white;
+      border-radius: 8px;
+      transition: background-color 0.3s ease;
+    }
+    #menu button:disabled {
+      background-color: #0056b3;
+      cursor: default;
+    }
+    section {
+      display: none;
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      min-height: 400px;
+    }
+    section.active {
+      display: block;
+    }
+    /* Chat styles */
+    #chat #usernameDisplay {
       text-align: center;
       font-size: 1.4rem;
       margin-bottom: 1.5rem;
       color: #555;
     }
-    #messages {
-      flex-grow: 1;
+    #chat #messages {
+      height: 300px;
       overflow-y: auto;
       background: white;
       padding: 1rem;
@@ -42,16 +63,16 @@
       font-size: 1.2rem;
       line-height: 1.4;
     }
-    #messages div {
+    #chat #messages div {
       margin-bottom: 1rem;
       word-wrap: break-word;
     }
-    form {
+    #chat form {
       display: flex;
       gap: 0.5rem;
       margin-bottom: 1rem;
     }
-    #messageInput {
+    #chat #messageInput {
       flex-grow: 1;
       padding: 14px 16px;
       font-size: 1.3rem;
@@ -59,7 +80,7 @@
       border: 1px solid #ccc;
       outline: none;
     }
-    button {
+    #chat button {
       padding: 14px 24px;
       font-size: 1.3rem;
       background-color: #007bff;
@@ -69,23 +90,61 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-    button:hover {
+    #chat button:hover {
       background-color: #0056b3;
     }
   </style>
 </head>
 <body>
-  <h2>Chat Room</h2>
-  <div id="usernameDisplay"></div>
-  <div id="messages"></div>
 
-  <form id="messageForm">
-    <input id="messageInput" autocomplete="off" placeholder="Type your message..." />
-    <button type="submit">Send</button>
-  </form>
+  <div id="menu">
+    <button data-section="chat" disabled>Chat Room</button>
+    <button data-section="pictures">Pictures</button>
+    <button data-section="settings">Settings</button>
+  </div>
+
+  <section id="chat" class="active">
+    <h2>Chat Room</h2>
+    <div id="usernameDisplay"></div>
+    <div id="messages"></div>
+
+    <form id="messageForm">
+      <input id="messageInput" autocomplete="off" placeholder="Type your message..." />
+      <button type="submit">Send</button>
+    </form>
+  </section>
+
+  <section id="pictures">
+    <h2>Pictures</h2>
+    <p>Here you can upload and view pictures separately from the chat.</p>
+  </section>
+
+  <section id="settings">
+    <h2>Settings</h2>
+    <p>Settings content goes here.</p>
+  </section>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    // Menu toggle logic
+    const buttons = document.querySelectorAll('#menu button');
+    const sections = document.querySelectorAll('section');
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Enable all buttons
+        buttons.forEach(b => b.disabled = false);
+        // Disable clicked button
+        button.disabled = true;
+
+        // Hide all sections
+        sections.forEach(section => section.classList.remove('active'));
+        // Show selected section
+        document.getElementById(button.dataset.section).classList.add('active');
+      });
+    });
+
+    // Chat logic
     const socket = io();
 
     const params = new URLSearchParams(window.location.search);
@@ -110,6 +169,10 @@
       messages.appendChild(div);
       messages.scrollTop = messages.scrollHeight;
     });
+
+    // Disable initial active button for clarity
+    buttons[0].disabled = true;
   </script>
+
 </body>
 </html>
