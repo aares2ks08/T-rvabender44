@@ -3,118 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chat Room with Menu</title>
-  <script src="/socket.io/socket.io.js"></script>
+  <title>Simple Menu Test</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-    body, html {
-      margin: 0; padding: 0;
-      height: 100%;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #f5f7fa;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    #chat-container {
-      width: 90%;
-      max-width: 900px;
-      height: 90vh;
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
-      display: flex;
-      flex-direction: column;
-      padding: 20px;
-    }
-    h2 {
-      margin: 0 0 15px 0;
-      font-size: 2.8rem;
-      text-align: center;
-      color: #222;
-      font-weight: 700;
-      user-select: none;
-    }
-    #user-info {
-      text-align: center;
-      margin-bottom: 15px;
-      font-size: 1.3rem;
-      color: #555;
-      user-select: none;
-    }
-
-    /* Menu styles */
-    #menu {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 20px;
-      gap: 20px;
-    }
     #menu button {
-      background: #e0e0e0;
-      border: none;
-      border-radius: 25px;
-      padding: 10px 25px;
-      font-size: 1.15rem;
+      margin: 5px;
+      padding: 10px 20px;
       cursor: pointer;
-      font-weight: 600;
-      color: #444;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      user-select: none;
     }
-    #menu button.active,
-    #menu button:hover {
-      background-color: #007bff;
-      color: white;
-      box-shadow: 0 2px 8px rgba(0,123,255,0.4);
-    }
-
-    /* Sections */
     section {
-      flex-grow: 1;
-      overflow-y: auto;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      background-color: #fafafa;
-      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
       display: none;
-      font-size: 1.25rem;
-      line-height: 1.5;
+      border: 1px solid #ccc;
+      padding: 20px;
+      margin-top: 10px;
     }
     section.active {
       display: block;
     }
+  </style>
+</head>
+<body>
+  <div id="menu">
+    <button data-section="chat">Chat Room</button>
+    <button data-section="pictures">Pictures</button>
+    <button data-section="settings">Settings</button>
+  </div>
 
-    /* Chat messages */
-    #messages div {
-      margin-bottom: 15px;
-      word-wrap: break-word;
-    }
-    #messages strong {
-      color: #007bff;
-    }
-    #messages img {
-      max-width: 320px;
-      border-radius: 10px;
-      margin-top: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      display: block;
-    }
+  <section id="chat" class="active">This is the Chat Room section.</section>
+  <section id="pictures">This is the Pictures section.</section>
+  <section id="settings">This is the Settings section.</section>
 
-    /* Chat input form */
-    #messageForm {
-      display: flex;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    #messageInput {
-      flex-grow: 1;
-      font-size: 1.3rem;
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      outline: none;
-      transition: border-color
+  <script>
+    const buttons = document.querySelectorAll('#menu button');
+    const sections = document.querySelectorAll('section');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sections.forEach(s => s.classList.remove('active'));
+        document.getElementById(btn.dataset.section).classList.add('active');
+
+        buttons.forEach(b => b.disabled = false);
+        btn.disabled = true; // Disable active button for clarity
+      });
+    });
+
+    // Disable the first button initially (Chat active)
+    buttons[0].disabled = true;
+  </script>
+</body>
+</html>
