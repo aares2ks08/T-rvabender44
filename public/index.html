@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>4-Digit Password Login</title>
+</head>
+<body>
+  <h2>Enter 4-digit password</h2>
+  <form method="POST" action="/login">
+    <input type="password" name="password" maxlength="4" pattern="\d{4}" required autocomplete="off" />
+    <button type="submit">Login</button>
+  </form>
+</body>
+</html>
