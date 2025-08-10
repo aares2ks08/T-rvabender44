@@ -2,34 +2,43 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>My Stable Website</title>
+  <title>Round Centered Button</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="style.css"> <!-- Optional: if you add CSS -->
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: #f0f0f0;
+    }
+    #currency-btn {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #3b82f6;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    #currency-btn:active {
+      background: #2563eb;
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Welcome to My Website</h1>
-    <nav>
-      <a href="index.html">Home</a>
-      <!-- Add more navigation links here -->
-    </nav>
-  </header>
-  <main>
-    <p>This is your stable website homepage. Edit this content as you wish!</p>
-    <button id="currency-btn">Earn Currency</button>
-    <span id="currency-count">0</span>
-  </main>
-  <footer>
-    <p>&copy; 2025 Your Name</p>
-  </footer>
+  <button id="currency-btn"></button>
   <script>
-    // Simple currency counter as requested earlier
+    // Currency functionality is still here if you want to add a counter in the future
     let currency = 0;
-    const currencyBtn = document.getElementById("currency-btn");
-    const currencyCount = document.getElementById("currency-count");
-    currencyBtn.addEventListener("click", function() {
+    document.getElementById("currency-btn").addEventListener("click", function() {
       currency += 1;
-      currencyCount.textContent = currency;
+      // No visible counter since text is removed
     });
   </script>
 </body>
