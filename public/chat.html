@@ -1,178 +1,84 @@
-<!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Chat App with Menu</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: #f9f9f9;
-      color: #333;
-      box-sizing: border-box;
+<section id="settings">
+  <h2>Settings</h2>
+  <p>Manage your account below.</p>
+
+  <!-- Profile Picture -->
+  <h3>Profile Picture</h3>
+  <img id="profilePicPreview" src="" alt="No Profile Picture" style="width:100px; height:100px; object-fit:cover; border-radius:50%; border:1px solid #ccc; display:block; margin-bottom:10px;">
+  <input type="file" id="profilePicInput" accept="image/*"><br><br>
+  <button onclick="saveProfilePic()">Save Profile Picture</button>
+
+  <hr>
+
+  <!-- Change Password -->
+  <!-- ... keep your existing change password inputs and button here ... -->
+
+  <hr>
+
+  <!-- Change Username -->
+  <!-- ... keep your existing change username inputs and button here ... -->
+
+  <hr style="margin: 1.5rem 0;">
+
+  <!-- Log Out -->
+  <button onclick="logout()" style="padding:10px 20px; font-size:1.1rem; background:red; color:white; border:none; border-radius:6px; cursor:pointer;">Log Out</button>
+</section>
+
+<script>
+  const currentUser = params.get('user') || 'Anonymous';
+  const storageKey = 'chatAppUsers';
+  const picKey = 'chatAppProfilePics';
+
+  // Load profile picture on settings open
+  window.addEventListener('load', () => {
+    loadProfilePic();
+  });
+
+  function getProfilePics() {
+    return JSON.parse(localStorage.getItem(picKey)) || {};
+  }
+  function saveProfilePics(pics) {
+    localStorage.setItem(picKey, JSON.stringify(pics));
+  }
+
+  function loadProfilePic() {
+    const pics = getProfilePics();
+    const picData = pics[currentUser];
+    const img = document.getElementById('profilePicPreview');
+    if (picData) {
+      img.src = picData;
+    } else {
+      img.src = '';
+      img.alt = "No Profile Picture";
     }
-    #menu {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
+  }
+
+  function saveProfilePic() {
+    const input = document.getElementById('profilePicInput');
+    if (!input.files || !input.files[0]) {
+      alert("Please select an image first.");
+      return;
     }
-    #menu button {
-      padding: 10px 20px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      border: none;
-      background-color: #007bff;
-      color: white;
-      border-radius: 8px;
-      transition: background-color 0.3s ease;
+    const file = input.files[0];
+    if (!file.type.startsWith('image/')) {
+      alert("Only image files are allowed.");
+      return;
     }
-    #menu button:disabled {
-      background-color: #0056b3;
-      cursor: default;
-    }
-    section {
-      display: none;
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      min-height: 400px;
-    }
-    section.active {
-      display: block;
-    }
-    /* Chat styles */
-    #chat #usernameDisplay {
-      text-align: center;
-      font-size: 1.4rem;
-      margin-bottom: 1.5rem;
-      color: #555;
-    }
-    #chat #messages {
-      height: 300px;
-      overflow-y: auto;
-      background: white;
-      padding: 1rem;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      font-size: 1.2rem;
-      line-height: 1.4;
-    }
-    #chat #messages div {
-      margin-bottom: 1rem;
-      word-wrap: break-word;
-    }
-    #chat form {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    #chat #messageInput {
-      flex-grow: 1;
-      padding: 14px 16px;
-      font-size: 1.3rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      outline: none;
-    }
-    #chat button {
-      padding: 14px 24px;
-      font-size: 1.3rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #chat button:hover {
-      background-color: #0056b3;
-    }
-  </style>
-</head>
-<body>
 
-  <div id="menu">
-    <button data-section="chat" disabled>Chat Room</button>
-    <button data-section="pictures">Pictures</button>
-    <button data-section="settings">Settings</button>
-  </div>
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      let pics = getProfilePics();
+      pics[currentUser] = e.target.result;  // Base64 image string
+      saveProfilePics(pics);
+      alert("Profile picture saved!");
+      loadProfilePic();
+    };
+    reader.readAsDataURL(file);
+  }
 
-  <section id="chat" class="active">
-    <h2>Chat Room</h2>
-    <div id="usernameDisplay"></div>
-    <div id="messages"></div>
+  // (Keep your existing password & username change functions here...)
 
-    <form id="messageForm">
-      <input id="messageInput" autocomplete="off" placeholder="Type your message..." />
-      <button type="submit">Send</button>
-    </form>
-  </section>
-
-  <section id="pictures">
-    <h2>Pictures</h2>
-    <p>Here you can upload and view pictures separately from the chat.</p>
-  </section>
-
-  <section id="settings">
-    <h2>Settings</h2>
-    <p>Settings content goes here.</p>
-  </section>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    // Menu toggle logic
-    const buttons = document.querySelectorAll('#menu button');
-    const sections = document.querySelectorAll('section');
-
-    buttons.forEach(button => {
-      button.addEventListener('click', () => {
-        // Enable all buttons
-        buttons.forEach(b => b.disabled = false);
-        // Disable clicked button
-        button.disabled = true;
-
-        // Hide all sections
-        sections.forEach(section => section.classList.remove('active'));
-        // Show selected section
-        document.getElementById(button.dataset.section).classList.add('active');
-      });
-    });
-
-    // Chat logic
-    const socket = io();
-
-    const params = new URLSearchParams(window.location.search);
-    const user = params.get('user') || 'Anonymous';
-    document.getElementById('usernameDisplay').textContent = `User: ${user}`;
-
-    const messages = document.getElementById('messages');
-    const form = document.getElementById('messageForm');
-    const input = document.getElementById('messageInput');
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      if (input.value.trim()) {
-        socket.emit('chat message', { user, text: input.value.trim() });
-        input.value = '';
-      }
-    });
-
-    socket.on('chat message', msg => {
-      const div = document.createElement('div');
-      div.textContent = `${msg.user}: ${msg.text}`;
-      messages.appendChild(div);
-      messages.scrollTop = messages.scrollHeight;
-    });
-
-    // Disable initial active button for clarity
-    buttons[0].disabled = true;
-  </script>
-
-</body>
-</html>
+  function logout() {
+    window.location.href = 'index.html';
+  }
+</script>
