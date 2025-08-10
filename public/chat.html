@@ -28,7 +28,12 @@
     <button data-section="settings">Settings</button>
   </div>
 
-  <section id="chat" class="active">This is the Chat Room section.</section>
+  <section id="chat" class="active"><div id="messages" style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;"></div>
+
+<form id="messageForm">
+  <input id="messageInput" autocomplete="off" placeholder="Type your message..." style="width: 80%; padding: 10px;" />
+  <button type="submit" class="send">Send</button>
+</form>/section>
   <section id="pictures">This is the Pictures section.</section>
   <section id="settings">This is the Settings section.</section>
 
