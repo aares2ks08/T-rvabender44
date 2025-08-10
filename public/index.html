@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Basic Server Page</title>
+  <meta charset="UTF-8">
+  <title>My Stable Website</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css"> <!-- Optional: if you add CSS -->
 </head>
 <body>
-  <h1>Server is running!</h1>
-  <p>This page is served by your Node.js server.</p>
+  <header>
+    <h1>Welcome to My Website</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <!-- Add more navigation links here -->
+    </nav>
+  </header>
+  <main>
+    <p>This is your stable website homepage. Edit this content as you wish!</p>
+    <button id="currency-btn">Earn Currency</button>
+    <span id="currency-count">0</span>
+  </main>
+  <footer>
+    <p>&copy; 2025 Your Name</p>
+  </footer>
+  <script>
+    // Simple currency counter as requested earlier
+    let currency = 0;
+    const currencyBtn = document.getElementById("currency-btn");
+    const currencyCount = document.getElementById("currency-count");
+    currencyBtn.addEventListener("click", function() {
+      currency += 1;
+      currencyCount.textContent = currency;
+    });
+  </script>
 </body>
 </html>
