@@ -2,10 +2,63 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Minimal Page</title>
+  <title>Minimal Page with 4-Digit Password</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      max-width: 400px;
+      margin: auto;
+      background: #f7f7f7;
+      text-align: center;
+    }
+    input {
+      font-size: 1.5rem;
+      width: 100px;
+      padding: 0.3rem;
+      text-align: center;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 0.3rem 1rem;
+      margin-left: 0.5rem;
+      cursor: pointer;
+    }
+    #message {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
+
   <h1>Hello! Your server is running.</h1>
   <p>This page is served by your Node.js server.</p>
+
+  <h2>Enter 4-digit password</h2>
+  <input type="password" id="password" maxlength="4" pattern="\d{4}" autocomplete="off" />
+  <button onclick="checkPassword()">Submit</button>
+  <div id="message"></div>
+
+  <script>
+    function checkPassword() {
+      const input = document.getElementById('password').value.trim();
+      const message = document.getElementById('message');
+      if (input === "2008") {
+        message.style.color = 'green';
+        message.textContent = "Access Granted!";
+      } else {
+        message.style.color = 'red';
+        message.textContent = "Incorrect Password!";
+      }
+    }
+
+    document.getElementById('password').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
+  </script>
+
 </body>
 </html>
