@@ -1,342 +1,180 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login + Mobile Friendly Menu</title>
-  <style>
-    /* Base & reset */
-    * {
-      box-sizing: border-box;
-    }
-    body, html {
-      margin: 0; padding: 0; height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-      background-color: #121212;
-      color: #eee;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-
-    /* Login modal container */
-    #loginModal {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-
-    #loginBox {
-      background: #222;
-      padding: 2rem;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 320px;
-      box-shadow: 0 0 16px #3b6df3;
-      text-align: center;
-    }
-
-    #loginBox h2 {
-      margin-bottom: 1rem;
-      color: #3b6df3;
-    }
-
-    #loginBox input[type="text"],
-    #loginBox input[type="password"] {
-      width: 100%;
-      padding: 0.7rem 1rem;
-      margin: 0.5rem 0 1rem 0;
-      border-radius: 6px;
-      border: none;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    #loginBox button {
-      width: 100%;
-      padding: 0.8rem;
-      background-color: #3b6df3;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: background-color 0.3s ease;
-    }
-    #loginBox button:hover {
-      background-color: #2a52c4;
-    }
-
-    #loginError {
-      color: #ff5555;
-      min-height: 1.3rem;
-      margin-bottom: 1rem;
-      font-weight: 600;
-    }
-
-    /* Header menu */
-    header {
-      display: flex;
-      justify-content: center;
-      gap: 0.8rem;
-      padding: 1rem 0;
-      background-color: #1e1e1e;
-      border-radius: 10px 10px 0 0;
-      box-shadow: inset 0 -2px 5px rgba(0,0,0,0.8);
-      flex-wrap: wrap;
-      user-select: none;
-      display: none; /* hidden until login */
-    }
-
-    header button {
-      background: none;
-      border: none;
-      color: #bbb;
-      font-size: 1rem;
-      padding: 10px 16px;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      min-width: 90px;
-      flex-grow: 1;
-      max-width: 130px;
-      text-align: center;
-    }
-
-    header button.active,
-    header button:hover {
-      background-color: #3b6df3;
-      color: #fff;
-      box-shadow: 0 0 8px #3b6df3;
-    }
-
-    @media (max-width: 400px) {
-      header button {
-        font-size: 0.9rem;
-        padding: 8px 12px;
-        min-width: 70px;
-        max-width: 110px;
-      }
-    }
-
-    /* Main content */
-    main {
-      flex-grow: 1;
-      padding: 1rem;
-      background-color: #181818;
-      border-radius: 0 0 10px 10px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.7);
-      overflow-y: auto;
-      display: none; /* hidden until login */
-    }
-
-    section {
-      display: none;
-      animation: fadeIn 0.3s ease forwards;
-    }
-    section.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
-    }
-
-    h2 {
-      margin-top: 0;
-      margin-bottom: 1rem;
-      font-weight: 700;
-      font-size: 1.8rem;
-      color: #3b6df3;
-      text-align: center;
-    }
-
-    /* Chat styles */
-    #chat #messages {
-      height: 300px;
-      background: #222;
-      border-radius: 8px;
-      padding: 1rem;
-      overflow-y: auto;
-      font-size: 1.1rem;
-      line-height: 1.4;
-      margin-bottom: 1rem;
-      color: #ddd;
-    }
-    #chat form {
-      display: flex;
-      gap: 0.5rem;
-    }
-    #chat input[type="text"] {
-      flex-grow: 1;
-      padding: 0.7rem 1rem;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      font-size: 1rem;
-    }
-    #chat button[type="submit"] {
-      background-color: #3b6df3;
-      border: none;
-      border-radius: 8px;
-      color: white;
-      font-weight: 600;
-      padding: 0 1.2rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    #chat button[type="submit"]:hover {
-      background-color: #2a52c4;
-    }
-
-    /* Placeholder style */
-    .content-placeholder {
-      text-align: center;
-      font-size: 1.2rem;
-      color: #bbb;
-      margin-top: 2rem;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mobile Friendly Chat App</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #121212;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 1rem;
+  }
+  #loginScreen {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  #loginScreen input {
+    width: 90%;
+    max-width: 300px;
+    margin: 0.5rem 0;
+    padding: 12px;
+    font-size: 1.2rem;
+    border-radius: 8px;
+    border: none;
+  }
+  #loginScreen button {
+    width: 90%;
+    max-width: 300px;
+    padding: 12px;
+    font-size: 1.2rem;
+    background: #6200ee;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+  }
+  #loginScreen button:hover {
+    background: #3700b3;
+  }
+  #app {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+  }
+  #menu {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+  }
+  #menu button {
+    flex: 1;
+    margin: 0 0.25rem;
+    padding: 12px 0;
+    font-size: 1.1rem;
+    background: #1f1f1f;
+    border: none;
+    border-radius: 10px;
+    color: #eee;
+    cursor: pointer;
+  }
+  #menu button.active {
+    background: #6200ee;
+  }
+  section {
+    flex: 1;
+    display: none;
+    background: #222;
+    border-radius: 10px;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  section.active {
+    display: block;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Login Modal -->
-  <div id="loginModal">
-    <div id="loginBox">
-      <h2>Login</h2>
-      <div id="loginError"></div>
-      <input type="text" id="username" placeholder="Username" autocomplete="username" />
-      <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
-      <button id="loginBtn">Log In</button>
-    </div>
+<!-- Login Screen -->
+<div id="loginScreen">
+  <h2>Login</h2>
+  <input type="text" id="username" placeholder="Username" />
+  <input type="password" id="password" placeholder="Password" />
+  <button id="loginBtn">Login</button>
+  <p id="loginError" style="color: #f44336;"></p>
+</div>
+
+<!-- Main App -->
+<div id="app">
+  <div id="menu">
+    <button data-section="chat" class="active">Chat</button>
+    <button data-section="pictures">Pictures</button>
+    <button data-section="votes">Votes</button>
+    <button data-section="settings">Settings</button>
   </div>
 
-  <!-- Menu -->
-  <header>
-    <button class="active" data-section="chat">Chat Room</button>
-    <button data-section="pictures">Pictures</button>
-    <button data-section="settings">Settings</button>
-    <button data-section="votes">Vote System</button>
-  </header>
+  <section id="chat" class="active">
+    <h3>Chat Room</h3>
+    <!-- Chat content here -->
+    <p>Your chat box here...</p>
+  </section>
 
-  <!-- Pages -->
-  <main>
-    <section id="chat" class="active">
-      <h2>Chat Room</h2>
-      <div id="messages">Welcome to the chat! Say hi 👋</div>
-      <form id="messageForm">
-        <input id="messageInput" type="text" autocomplete="off" placeholder="Type your message..." />
-        <button type="submit">Send</button>
-      </form>
-    </section>
+  <section id="pictures">
+    <h3>Pictures</h3>
+    <!-- Picture posting content -->
+    <p>Picture posting area here...</p>
+  </section>
 
-    <section id="pictures">
-      <h2>Pictures</h2>
-      <div class="content-placeholder">
-        Here users can upload and view pictures.<br />
-        (This area will hold picture posting UI.)
-      </div>
-    </section>
+  <section id="votes">
+    <h3>Votes</h3>
+    <!-- Voting system content -->
+    <p>Voting system here...</p>
+  </section>
 
-    <section id="settings">
-      <h2>Settings</h2>
-      <div class="content-placeholder">
-        Settings options will appear here.
-      </div>
-    </section>
+  <section id="settings">
+    <h3>Settings</h3>
+    <!-- Settings content -->
+    <p>Settings including profile picture upload here...</p>
+  </section>
+</div>
 
-    <section id="votes">
-      <h2>Vote System</h2>
-      <div class="content-placeholder">
-        Users can participate in votes here.
-      </div>
-    </section>
-  </main>
+<script>
+  const loginScreen = document.getElementById('loginScreen');
+  const app = document.getElementById('app');
+  const loginBtn = document.getElementById('loginBtn');
+  const loginError = document.getElementById('loginError');
 
-  <script>
-    // Hardcoded users for demo
-    const users = {
-      'Raen': '0000',
-      'Kova': '0000',
-      'Tissid': '51area51'
-    };
+  const users = {
+    'Raen': '0000',
+    'Kova': '0000',
+    'Tissid': '51area51',
+    'Aare': '2008'
+  };
 
-    const loginModal = document.getElementById('loginModal');
-    const loginBtn = document.getElementById('loginBtn');
-    const usernameInput = document.getElementById('username');
-    const passwordInput = document.getElementById('password');
-    const loginError = document.getElementById('loginError');
+  loginBtn.onclick = () => {
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
 
-    const header = document.querySelector('header');
-    const main = document.querySelector('main');
+    if (users[username] && users[username] === password) {
+      loginScreen.style.display = 'none';
+      app.style.display = 'flex';
+      document.querySelector('#menu button.active').click(); // Show first section
+    } else {
+      loginError.textContent = 'Invalid username or password.';
+    }
+  };
 
-    loginBtn.addEventListener('click', () => {
-      const user = usernameInput.value.trim();
-      const pass = passwordInput.value.trim();
-      if (!user || !pass) {
-        loginError.textContent = "Please enter username and password.";
-        return;
-      }
-      if (users[user] && users[user] === pass) {
-        // Login success
-        loginError.textContent = "";
-        loginModal.style.display = 'none';
-        header.style.display = 'flex';
-        main.style.display = 'block';
-        usernameInput.value = '';
-        passwordInput.value = '';
-        usernameInput.blur();
-        passwordInput.blur();
-      } else {
-        loginError.textContent = "Invalid username or password.";
-      }
+  // Menu button switching
+  const menuButtons = document.querySelectorAll('#menu button');
+  const sections = document.querySelectorAll('section');
+
+  menuButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Remove active from all buttons
+      menuButtons.forEach(btn => btn.classList.remove('active'));
+      // Add active to clicked button
+      button.classList.add('active');
+
+      // Hide all sections
+      sections.forEach(section => section.classList.remove('active'));
+      // Show the selected section
+      const sectionId = button.dataset.section;
+      document.getElementById(sectionId).classList.add('active');
     });
+  });
+</script>
 
-    // Allow Enter key to submit login
-    [usernameInput, passwordInput].forEach(input => {
-      input.addEventListener('keydown', e => {
-        if (e.key === 'Enter') {
-          loginBtn.click();
-        }
-      });
-    });
-
-    // Menu toggle
-    const buttons = document.querySelectorAll('header button');
-    const sections = document.querySelectorAll('main section');
-
-    buttons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        buttons.forEach(b => b.classList.remove('active'));
-        sections.forEach(s => s.classList.remove('active'));
-        btn.classList.add('active');
-        const targetId = btn.getAttribute('data-section');
-        document.getElementById(targetId).classList.add('active');
-      });
-    });
-
-    // Simple chat message functionality
-    const form = document.getElementById('messageForm');
-    const input = document.getElementById('messageInput');
-    const messages = document.getElementById('messages');
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const msg = input.value.trim();
-      if (!msg) return;
-      const newMsg = document.createElement('div');
-      newMsg.textContent = `You: ${msg}`;
-      messages.appendChild(newMsg);
-      messages.scrollTop = messages.scrollHeight;
-      input.value = '';
-    });
-  </script>
 </body>
 </html>
