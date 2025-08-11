@@ -1,105 +1,36 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login + Multi-Page App</title>
+  <title>Mobile Friendly Chat App Menu</title>
   <style>
-    /* Reset & basics */
+    /* Reset & base */
     * {
       box-sizing: border-box;
     }
-    body, html {
-      margin: 0; padding: 0;
-      height: 100%;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       background-color: #121212;
       color: #eee;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      flex-direction: column;
       min-height: 100vh;
-      flex-direction: column;
     }
 
-    /* Login container */
-    #login {
-      width: 320px;
-      background: #1f1f1f;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    #login h2 {
-      margin: 0 0 1rem 0;
-      color: #3b6df3;
-      text-align: center;
-      width: 100%;
-    }
-
-    #error {
-      color: #f33;
-      margin-bottom: 1rem;
-      min-height: 1.3em;
-      text-align: center;
-      width: 100%;
-    }
-
-    input[type=text], input[type=password] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 6px;
-      font-size: 1rem;
-      background: #2a2a2a;
-      color: #eee;
-    }
-
-    input::placeholder {
-      color: #bbb;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      background: #3b6df3;
-      border: none;
-      color: white;
-      font-size: 1.1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #2557c7;
-    }
-
-    /* App container (hidden initially) */
-    #app {
-      display: none;
-      flex-direction: column;
-      width: 90vw;
-      max-width: 700px;
-      height: 90vh;
-      background: #1f1f1f;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-    }
-
-    /* Header with menu buttons */
+    /* Header menu */
     header {
       display: flex;
       justify-content: center;
-      gap: 1.5rem;
+      gap: 0.8rem;
       padding: 1rem 0;
-      background-color: #2a2a2a;
+      background-color: #1e1e1e;
       border-radius: 10px 10px 0 0;
       box-shadow: inset 0 -2px 5px rgba(0,0,0,0.8);
+      flex-wrap: wrap;   /* ALLOW BUTTON WRAPPING */
+      user-select: none;
     }
 
     header button {
@@ -107,12 +38,14 @@
       border: none;
       color: #bbb;
       font-size: 1rem;
-      padding: 10px 18px;
+      padding: 10px 16px;
       cursor: pointer;
       border-radius: 6px;
       transition: background-color 0.3s ease, color 0.3s ease;
-      user-select: none;
-      min-width: 100px;
+      min-width: 90px;
+      flex-grow: 1;
+      max-width: 130px;
+      text-align: center;
     }
 
     header button.active,
@@ -122,124 +55,108 @@
       box-shadow: 0 0 8px #3b6df3;
     }
 
-    /* Main content area */
+    @media (max-width: 400px) {
+      header button {
+        font-size: 0.9rem;
+        padding: 8px 12px;
+        min-width: 70px;
+        max-width: 110px;
+      }
+    }
+
+    /* Sections */
     main {
       flex-grow: 1;
-      padding: 20px;
-      overflow-y: auto;
-      background: #222;
+      padding: 1rem;
+      background-color: #181818;
       border-radius: 0 0 10px 10px;
-      color: #eee;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.7);
+      overflow-y: auto;
     }
 
     section {
       display: none;
-      height: 100%;
+      animation: fadeIn 0.3s ease forwards;
     }
 
     section.active {
       display: block;
     }
+
+    /* Fade in animation for sections */
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    /* Sample content styling */
+    h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #3b6df3;
+      text-align: center;
+    }
+
+    /* Chat box styling */
+    #chat #messages {
+      height: 300px;
+      background: #222;
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-y: auto;
+      font-size: 1.1rem;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+      color: #ddd;
+    }
+    #chat form {
+      display: flex;
+      gap: 0.5rem;
+    }
+    #chat input[type="text"] {
+      flex-grow: 1;
+      padding: 0.7rem 1rem;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+    }
+    #chat button[type="submit"] {
+      background-color: #3b6df3;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      padding: 0 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    #chat button[type="submit"]:hover {
+      background-color: #2a52c4;
+    }
+
+    /* Other sections content */
+    .content-placeholder {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #bbb;
+      margin-top: 2rem;
+    }
+
   </style>
 </head>
 <body>
+  <header>
+    <button class="active" data-section="chat">Chat Room</button>
+    <button data-section="pictures">Pictures</button>
+    <button data-section="settings">Settings</button>
+    <button data-section="votes">Vote System</button>
+  </header>
 
-  <!-- LOGIN -->
-  <div id="login">
-    <h2>Login</h2>
-    <div id="error"></div>
-    <input type="text" id="username" placeholder="Username" autocomplete="off" />
-    <input type="password" id="password" placeholder="Password" autocomplete="off" />
-    <button id="loginBtn">Log In</button>
-  </div>
-
-  <!-- APP -->
-  <div id="app">
-    <header>
-      <button data-page="chat" class="active">Chatbox</button>
-      <button data-page="pictures">Picture Posting</button>
-      <button data-page="settings">Settings</button>
-      <button data-page="votes">Vote System</button>
-    </header>
-
-    <main>
-      <section id="chat" class="active">
-        <h2>Chatbox</h2>
-        <p>Welcome to the chat, <span id="displayUser"></span>!</p>
-        <!-- Chatbox content here -->
-      </section>
-
-      <section id="pictures">
-        <h2>Picture Posting</h2>
-        <p>Picture posting feature goes here.</p>
-      </section>
-
-      <section id="settings">
-        <h2>Settings</h2>
-        <p>Settings content goes here.</p>
-      </section>
-
-      <section id="votes">
-        <h2>Vote System</h2>
-        <p>Vote system feature goes here.</p>
-      </section>
-    </main>
-  </div>
-
-<script>
-  // Registered users & passwords
-  const users = {
-    'Raen': '0000',
-    'Kova': '0000'
-  };
-
-  const loginDiv = document.getElementById('login');
-  const appDiv = document.getElementById('app');
-  const errorDiv = document.getElementById('error');
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
-  const loginBtn = document.getElementById('loginBtn');
-  const displayUser = document.getElementById('displayUser');
-
-  // Focus username on load
-  usernameInput.focus();
-
-  loginBtn.addEventListener('click', () => {
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value;
-
-    if (users[username] && users[username] === password) {
-      errorDiv.textContent = '';
-      loginDiv.style.display = 'none';
-      appDiv.style.display = 'flex';
-      displayUser.textContent = username;
-    } else {
-      errorDiv.textContent = 'Invalid username or password';
-    }
-  });
-
-  // Allow pressing Enter to login
-  [usernameInput, passwordInput].forEach(input => {
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter') {
-        loginBtn.click();
-      }
-    });
-  });
-
-  // Menu navigation
-  const buttons = document.querySelectorAll('header button');
-  const sections = document.querySelectorAll('main section');
-
-  buttons.forEach(button => {
-    button.addEventListener('click', () => {
-      buttons.forEach(btn => btn.classList.remove('active'));
-      sections.forEach(sec => sec.classList.remove('active'));
-      button.classList.add('active');
-      document.getElementById(button.dataset.page).classList.add('active');
-    });
-  });
-</script>
-
-</body>
-</html>
+  <main>
+    <section id="chat" class="active">
+      <h2>Chat Room</h2>
+      <div id="messages">Welcome to the chat! Say hi 👋</div>
+      <form
