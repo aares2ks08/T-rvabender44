@@ -3,29 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Modern Dark Multi-Page App</title>
+  <title>Login + Multi-Page App</title>
   <style>
-    /* Reset */
+    /* Reset & basics */
     * {
       box-sizing: border-box;
     }
-    body {
-      margin: 0; 
+    body, html {
+      margin: 0; padding: 0;
+      height: 100%;
       font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       background-color: #121212;
       color: #eee;
       display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
       flex-direction: column;
-      height: 100vh;
     }
+
+    /* Login container */
+    #login {
+      width: 320px;
+      background: #1f1f1f;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #login h2 {
+      margin: 0 0 1rem 0;
+      color: #3b6df3;
+      text-align: center;
+      width: 100%;
+    }
+
+    #error {
+      color: #f33;
+      margin-bottom: 1rem;
+      min-height: 1.3em;
+      text-align: center;
+      width: 100%;
+    }
+
+    input[type=text], input[type=password] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      background: #2a2a2a;
+      color: #eee;
+    }
+
+    input::placeholder {
+      color: #bbb;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #3b6df3;
+      border: none;
+      color: white;
+      font-size: 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #2557c7;
+    }
+
+    /* App container (hidden initially) */
+    #app {
+      display: none;
+      flex-direction: column;
+      width: 90vw;
+      max-width: 700px;
+      height: 90vh;
+      background: #1f1f1f;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
+    }
+
+    /* Header with menu buttons */
     header {
-      background-color: #1f1f1f;
-      padding: 1rem 2rem;
       display: flex;
       justify-content: center;
       gap: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      padding: 1rem 0;
+      background-color: #2a2a2a;
+      border-radius: 10px 10px 0 0;
+      box-shadow: inset 0 -2px 5px rgba(0,0,0,0.8);
     }
+
     header button {
       background: none;
       border: none;
@@ -35,85 +111,132 @@
       cursor: pointer;
       border-radius: 6px;
       transition: background-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+      min-width: 100px;
     }
-    header button.active, header button:hover {
+
+    header button.active,
+    header button:hover {
       background-color: #3b6df3;
       color: #fff;
       box-shadow: 0 0 8px #3b6df3;
     }
+
+    /* Main content area */
     main {
       flex-grow: 1;
       padding: 20px;
       overflow-y: auto;
+      background: #222;
+      border-radius: 0 0 10px 10px;
+      color: #eee;
     }
+
     section {
       display: none;
       height: 100%;
     }
+
     section.active {
       display: block;
-    }
-    /* Example content style */
-    h2 {
-      margin-top: 0;
-      color: #3b6df3;
-    }
-    /* Scrollbar */
-    main::-webkit-scrollbar {
-      width: 8px;
-    }
-    main::-webkit-scrollbar-thumb {
-      background-color: #3b6df3;
-      border-radius: 4px;
     }
   </style>
 </head>
 <body>
 
-<header>
-  <button data-page="chat" class="active">Chatbox</button>
-  <button data-page="pictures">Picture Posting</button>
-  <button data-page="settings">Settings</button>
-  <button data-page="votes">Vote System</button>
-</header>
+  <!-- LOGIN -->
+  <div id="login">
+    <h2>Login</h2>
+    <div id="error"></div>
+    <input type="text" id="username" placeholder="Username" autocomplete="off" />
+    <input type="password" id="password" placeholder="Password" autocomplete="off" />
+    <button id="loginBtn">Log In</button>
+  </div>
 
-<main>
-  <section id="chat" class="active">
-    <h2>Chatbox</h2>
-    <p>Chat content goes here.</p>
-  </section>
+  <!-- APP -->
+  <div id="app">
+    <header>
+      <button data-page="chat" class="active">Chatbox</button>
+      <button data-page="pictures">Picture Posting</button>
+      <button data-page="settings">Settings</button>
+      <button data-page="votes">Vote System</button>
+    </header>
 
-  <section id="pictures">
-    <h2>Picture Posting</h2>
-    <p>Picture posting feature goes here.</p>
-  </section>
+    <main>
+      <section id="chat" class="active">
+        <h2>Chatbox</h2>
+        <p>Welcome to the chat, <span id="displayUser"></span>!</p>
+        <!-- Chatbox content here -->
+      </section>
 
-  <section id="settings">
-    <h2>Settings</h2>
-    <p>Settings content goes here.</p>
-  </section>
+      <section id="pictures">
+        <h2>Picture Posting</h2>
+        <p>Picture posting feature goes here.</p>
+      </section>
 
-  <section id="votes">
-    <h2>Vote System</h2>
-    <p>Vote system feature goes here.</p>
-  </section>
-</main>
+      <section id="settings">
+        <h2>Settings</h2>
+        <p>Settings content goes here.</p>
+      </section>
+
+      <section id="votes">
+        <h2>Vote System</h2>
+        <p>Vote system feature goes here.</p>
+      </section>
+    </main>
+  </div>
 
 <script>
+  // Registered users & passwords
+  const users = {
+    'Raen': '0000',
+    'Kova': '0000'
+  };
+
+  const loginDiv = document.getElementById('login');
+  const appDiv = document.getElementById('app');
+  const errorDiv = document.getElementById('error');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const loginBtn = document.getElementById('loginBtn');
+  const displayUser = document.getElementById('displayUser');
+
+  // Focus username on load
+  usernameInput.focus();
+
+  loginBtn.addEventListener('click', () => {
+    const username = usernameInput.value.trim();
+    const password = passwordInput.value;
+
+    if (users[username] && users[username] === password) {
+      errorDiv.textContent = '';
+      loginDiv.style.display = 'none';
+      appDiv.style.display = 'flex';
+      displayUser.textContent = username;
+    } else {
+      errorDiv.textContent = 'Invalid username or password';
+    }
+  });
+
+  // Allow pressing Enter to login
+  [usernameInput, passwordInput].forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        loginBtn.click();
+      }
+    });
+  });
+
+  // Menu navigation
   const buttons = document.querySelectorAll('header button');
   const sections = document.querySelectorAll('main section');
 
   buttons.forEach(button => {
     button.addEventListener('click', () => {
-      // Remove active class on all buttons
       buttons.forEach(btn => btn.classList.remove('active'));
-      // Hide all sections
       sections.forEach(sec => sec.classList.remove('active'));
-      
-      // Activate clicked button and its section
       button.classList.add('active');
-      const page = button.getAttribute('data-page');
-      document.getElementById(page).classList.add('active');
+      document.getElementById(button.dataset.page).classList.add('active');
     });
   });
 </script>
