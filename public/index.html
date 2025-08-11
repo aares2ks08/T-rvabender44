@@ -3,55 +3,82 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Dark Login Page</title>
+<title>Dark Centered Login</title>
 <style>
-  body {
+  /* FULL SCREEN CENTERING */
+  html, body {
+    height: 100%;
+    margin: 0;
     background: #121212;
-    color: #eee;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Arial, sans-serif;
+    color: #ddd;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    margin: 0;
   }
-  #loginBox, #welcomeBox {
-    background: #1e1e1e;
-    padding: 2rem;
+
+  /* LOGIN CONTAINER */
+  #loginBox {
+    background-color: #1e1e1e;
+    padding: 40px 30px;
     border-radius: 12px;
-    box-shadow: 0 0 15px #00ff99;
+    box-shadow: 0 0 20px #3b6df3;
     width: 320px;
     text-align: center;
   }
+
+  /* TITLE */
   h2 {
-    margin-bottom: 1rem;
-  }
-  input {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0 20px 0;
-    border-radius: 8px;
-    border: none;
-    font-size: 1rem;
-  }
-  button {
-    background: #00ff99;
-    border: none;
-    padding: 12px;
-    width: 100%;
-    font-size: 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    color: #121212;
+    color: #3b6df3;
+    margin-bottom: 25px;
     font-weight: bold;
   }
-  button:hover {
-    background: #00cc77;
+
+  /* INPUT FIELDS */
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 14px 12px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1.5px solid #555;
+    background: #2a2a2a;
+    color: #eee;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
   }
+
+  input[type="text"]:focus,
+  input[type="password"]:focus {
+    border-color: #3b6df3;
+  }
+
+  /* BUTTON */
+  button {
+    width: 100%;
+    padding: 14px 0;
+    background-color: #3b6df3;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #274abe;
+  }
+
+  /* ERROR MESSAGE */
   #errorMsg {
-    color: #ff4444;
-    margin-bottom: 10px;
-    min-height: 1.2em;
+    color: #ff4c4c;
+    margin-bottom: 15px;
+    min-height: 1.5em;
+    font-weight: 600;
   }
 </style>
 </head>
@@ -65,21 +92,13 @@
   <button onclick="tryLogin()">Login</button>
 </div>
 
-<div id="welcomeBox" style="display:none;">
-  <h2>Welcome, <span id="userDisplay"></span>!</h2>
-  <p>You are logged in.</p>
-</div>
-
 <script>
   function tryLogin() {
     const user = document.getElementById('username').value.trim();
     const pass = document.getElementById('password').value;
-
     if (user === 'Tissid' && pass === '51area51') {
-      // Success
-      document.getElementById('loginBox').style.display = 'none';
-      document.getElementById('userDisplay').textContent = user;
-      document.getElementById('welcomeBox').style.display = 'block';
+      alert('Welcome, ' + user + '!');
+      // You can redirect or do something else here
     } else {
       document.getElementById('errorMsg').textContent = 'Incorrect username or password';
     }
