@@ -331,7 +331,6 @@ app.post('/upload', upload.single('image'), (req, res) => {
 // Image upload endpoint for profile picture
 app.post('/uploadProfilePic', upload.single('profilePic'), (req, res) => {
   if(!req.file || !req.body.user) return res.json({ success: false });
-  // For simplicity just send back the uploaded image path, no user DB
   const filePath = '/uploads/' + req.file.filename;
   res.json({ success: true, filepath: filePath });
 });
