@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mobile Chat App</title>
+  <title>Mobile Chat App with Login</title>
   <style>
     /* Reset and base */
     * {
@@ -13,13 +13,69 @@
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #121212;
-      color: #eee;
+      color: #ddd;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
       align-items: center;
       padding: 10px;
     }
+    /* Login overlay */
+    #loginOverlay {
+      position: fixed;
+      inset: 0;
+      background: #1f1f1fdd;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #loginOverlay form {
+      background: #222;
+      padding: 20px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 320px;
+      box-shadow: 0 0 15px #6200eeaa;
+    }
+    #loginOverlay h2 {
+      color: #bb86fc;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    #loginOverlay input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #121212;
+      color: #eee;
+      font-size: 1rem;
+    }
+    #loginOverlay button {
+      width: 100%;
+      padding: 12px;
+      background: #6200ee;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #loginOverlay button:hover {
+      background: #7e3ff2;
+    }
+    #loginError {
+      color: #ff5555;
+      text-align: center;
+      margin-bottom: 12px;
+      min-height: 1.4em;
+    }
+
     /* Menu */
     #menu {
       display: flex;
@@ -33,15 +89,15 @@
       flex: 1;
       padding: 12px 0;
       font-size: 1.1rem;
-      background: #1e1e1e;
+      background: #2a2a2a;
       border: none;
       border-radius: 8px;
-      color: #bbb;
+      color: #ccc;
       cursor: pointer;
       transition: background-color 0.3s, color 0.3s;
     }
     #menu button.active {
-      background: #6200ee;
+      background: #3700b3;
       color: white;
       font-weight: bold;
       cursor: default;
@@ -51,10 +107,10 @@
       display: none;
       width: 100%;
       max-width: 480px;
-      background-color: #1e1e1e;
+      background-color: #222;
       border-radius: 12px;
       padding: 15px;
-      box-shadow: 0 0 10px #6200eeaa;
+      box-shadow: 0 0 10px #3700b3aa;
       flex-grow: 1;
       overflow-y: auto;
       max-height: 70vh;
@@ -74,7 +130,7 @@
       height: 250px;
       overflow-y: auto;
       background: #121212;
-      border: 1px solid #333;
+      border: 1px solid #444;
       border-radius: 8px;
       padding: 10px;
       font-size: 1rem;
@@ -92,13 +148,13 @@
       flex: 1;
       padding: 10px;
       border-radius: 8px;
-      border: 1px solid #333;
-      background: #222;
+      border: 1px solid #444;
+      background: #1b1b1b;
       color: #eee;
       font-size: 1rem;
     }
     #chat button {
-      background: #6200ee;
+      background: #3700b3;
       border: none;
       border-radius: 8px;
       padding: 10px 15px;
@@ -108,14 +164,14 @@
       transition: background-color 0.3s;
     }
     #chat button:hover {
-      background: #7e3ff2;
+      background: #5b3edc;
     }
 
     /* Pictures */
     #pictures p {
       text-align: center;
       font-size: 1rem;
-      color: #ccc;
+      color: #aaa;
     }
 
     /* Settings */
@@ -130,6 +186,10 @@
       margin-bottom: 10px;
       width: 100%;
       color: #eee;
+      background: #1b1b1b;
+      border-radius: 6px;
+      border: 1px solid #444;
+      padding: 8px;
     }
     #profilePreview {
       max-width: 100%;
@@ -144,7 +204,7 @@
     #vote p {
       text-align: center;
       font-size: 1rem;
-      color: #ccc;
+      color: #aaa;
     }
 
     /* Responsive */
@@ -158,14 +218,24 @@
 </head>
 <body>
 
-  <div id="menu">
-    <button class="active" data-section="chat">Chat</button>
-    <button data-section="pictures">Pictures</button>
-    <button data-section="settings">Settings</button>
-    <button data-section="vote">Vote</button>
+  <div id="loginOverlay">
+    <form id="loginForm">
+      <h2>Login</h2>
+      <div id="loginError"></div>
+      <input type="text" id="username" placeholder="Username" autocomplete="off" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Log In</button>
+    </form>
   </div>
 
-  <section id="chat" class="active">
+  <div id="menu" style="display:none;">
+    <button class="active" data-section="chat">Chat</button>
+    <button data-section="pictures">Pictures</button>
+    <button data-section="vote">Vote</button>
+    <button data-section="settings">Settings</button>
+  </div>
+
+  <section id="chat" class="active" style="display:none;">
     <h2>Chat Room</h2>
     <div id="messages"></div>
     <form id="messageForm">
@@ -174,41 +244,80 @@
     </form>
   </section>
 
-  <section id="pictures">
+  <section id="pictures" style="display:none;">
     <h2>Pictures</h2>
     <p>Upload and view pictures here (coming soon).</p>
   </section>
 
-  <section id="settings">
+  <section id="vote" style="display:none;">
+    <h2>Vote System</h2>
+    <p>Voting feature coming soon.</p>
+  </section>
+
+  <section id="settings" style="display:none;">
     <h2>Settings</h2>
     <label for="profilePicInput">Upload Profile Picture:</label>
     <input type="file" id="profilePicInput" accept="image/*" />
     <img id="profilePreview" alt="Profile Preview" />
   </section>
 
-  <section id="vote">
-    <h2>Vote System</h2>
-    <p>Voting feature coming soon.</p>
-  </section>
-
   <script>
-    // Menu toggle
-    const buttons = document.querySelectorAll('#menu button');
+    const loginOverlay = document.getElementById('loginOverlay');
+    const loginForm = document.getElementById('loginForm');
+    const loginError = document.getElementById('loginError');
+    const menu = document.getElementById('menu');
     const sections = document.querySelectorAll('section');
+    const buttons = document.querySelectorAll('#menu button');
 
+    // Hardcoded users/passwords
+    const users = {
+      'Tissid': '51area51',
+      'Raen': '0000',
+      'Kova': '0000'
+    };
+
+    // Login submit
+    loginForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (users[username] && users[username] === password) {
+        // Success: hide login, show menu and chat
+        loginOverlay.style.display = 'none';
+        menu.style.display = 'flex';
+        showSection('chat');
+      } else {
+        loginError.textContent = 'Invalid username or password!';
+      }
+    });
+
+    // Menu button click
     buttons.forEach(btn => {
       btn.addEventListener('click', () => {
-        // Remove active from all buttons and sections
-        buttons.forEach(b => b.classList.remove('active'));
-        sections.forEach(s => s.classList.remove('active'));
+        if (btn.classList.contains('active')) return; // Already active
 
-        // Add active to clicked button and corresponding section
+        buttons.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById(btn.dataset.section).classList.add('active');
+
+        showSection(btn.dataset.section);
       });
     });
 
-    // Chat logic (no socket, demo only)
+    // Show section helper
+    function showSection(id) {
+      sections.forEach(s => {
+        if (s.id === id) {
+          s.style.display = 'block';
+          s.classList.add('active');
+        } else {
+          s.style.display = 'none';
+          s.classList.remove('active');
+        }
+      });
+    }
+
+    // Chat logic (no backend, demo only)
     const messagesDiv = document.getElementById('messages');
     const form = document.getElementById('messageForm');
     const input = document.getElementById('messageInput');
