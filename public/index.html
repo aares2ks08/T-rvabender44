@@ -1,133 +1,121 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Clicker Game</title>
-<style>
-  body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background: #222;
-    color: white;
-    margin: 0;
-    padding: 0;
-  }
-  h1 { margin: 10px 0; }
-  #gameArea {
-    margin-top: 20px;
-  }
-  #clickSquare {
-    width: 150px;
-    height: 150px;
-    background: orange;
-    margin: 0 auto;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
-    border-radius: 10px;
-  }
-  #permMultiDisplay {
-    margin-top: 10px;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  #currency {
-    margin-top: 60px; /* pushed further down */
-    font-size: 22px;
-  }
-  button {
-    margin: 10px;
-    padding: 10px;
-    font-size: 16px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  #msg {
-    margin-top: 15px;
-    font-size: 18px;
-  }
-</style>
+  <title>Clicker Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #222;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      margin-top: 10px;
+    }
+    #top-section {
+      margin-top: 10px;
+    }
+    #middle-section {
+      margin-top: 5px;
+    }
+    #bottom-section {
+      margin-top: 40px; /* pushes currency down */
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+    }
+    #msg {
+      margin-top: 15px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
+  <h1>Clicker Game</h1>
 
-<h1>Clicker Game</h1>
-<div id="gameArea">
-  <div id="clickSquare">Click</div>
-  <div id="permMultiDisplay">Permanent Multiplier: 1.10x</div>
-  <div id="currency">Currency: 0</div>
-</div>
+  <!-- Square and multiplier at top -->
+  <div id="top-section">
+    <button id="clickBtn">Click</button>
+    <p>Multiplier: <span id="multiplier">1.10</span>x</p>
+  </div>
 
-<button id="upgradeBtn">Upgrade Multiplier (Cost: 50)</button>
-<button id="luckBtn">Try Your Luck (Cost: 1000)</button>
+  <!-- Upgrade buttons in middle -->
+  <div id="middle-section">
+    <button id="upgradeBtn">Upgrade (+1x) — Cost: 50</button>
+    <button id="luckBtn">Luck Boost — Cost: 1000</button>
+  </div>
 
-<div id="msg"></div>
+  <!-- Currency counter lower -->
+  <div id="bottom-section">
+    <p>Currency: <span id="currency">0</span></p>
+  </div>
 
-<script>
-let currency = 0;
-let permMultiplier = 1.10;
-let upgradeCost = 50;
-let luckBtnCost = 1000;
+  <p id="msg"></p>
 
-const clickSquare = document.getElementById("clickSquare");
-const permMultiDisplay = document.getElementById("permMultiDisplay");
-const currencyDisplay = document.getElementById("currency");
-const upgradeBtn = document.getElementById("upgradeBtn");
-const luckBtn = document.getElementById("luckBtn");
-const msg = document.getElementById("msg");
+  <script>
+    let currency = 0;
+    let permMultiplier = 1.10;
+    let clickValue = 1;
 
-function updateCounter() {
-  permMultiDisplay.textContent = `Permanent Multiplier: ${permMultiplier.toFixed(2)}x`;
-  currencyDisplay.textContent = `Currency: ${Math.floor(currency)}`;
-  upgradeBtn.textContent = `Upgrade Multiplier (Cost: ${upgradeCost})`;
-  luckBtn.textContent = `Try Your Luck (Cost: ${luckBtnCost})`;
-}
+    let upgradeBtnCost = 50;
+    let luckBtnCost = 1000;
 
-clickSquare.addEventListener("click", () => {
-  currency += permMultiplier;
-  updateCounter();
-});
+    const currencyDisplay = document.getElementById('currency');
+    const multiplierDisplay = document.getElementById('multiplier');
+    const msg = document.getElementById('msg');
 
-// Upgrade button (+1x, cost +30 each click)
-upgradeBtn.addEventListener("click", () => {
-  if (currency >= upgradeCost) {
-    currency -= upgradeCost;
-    permMultiplier += 1;
-    upgradeCost += 30;
-    msg.textContent = `Multiplier increased by +1x!`;
-    updateCounter();
-  } else {
-    msg.textContent = "Not enough currency!";
-  }
-});
+    const clickBtn = document.getElementById('clickBtn');
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    const luckBtn = document.getElementById('luckBtn');
 
-// Luck button (nerfed rewards)
-luckBtn.addEventListener("click", () => {
-  if (currency >= luckBtnCost) {
-    currency -= luckBtnCost;
-    luckBtnCost += 500;
-    let rolled;
-    if (Math.random() < 0.02) {
-      rolled = 10 + Math.random() * 10; // Rare 10x–20x
-      rolled = Math.round(rolled * 100) / 100;
-      msg.textContent = `🎉 INCREDIBLE LUCK! +${rolled.toFixed(2)}x multiplier!`;
-    } else {
-      rolled = 0.2 + Math.random() * (3 - 0.2); // Common 0.2x–3x
-      rolled = Math.round(rolled * 100) / 100;
-      msg.textContent = `You gained +${rolled.toFixed(2)}x multiplier.`;
+    function updateCounter() {
+      currencyDisplay.textContent = Math.round(currency);
+      multiplierDisplay.textContent = permMultiplier.toFixed(2);
+      upgradeBtn.textContent = `Upgrade (+1x) — Cost: ${upgradeBtnCost}`;
+      luckBtn.textContent = `Luck Boost — Cost: ${luckBtnCost}`;
     }
-    permMultiplier += rolled;
-    permMultiplier = Math.round(permMultiplier * 100) / 100;
+
+    clickBtn.addEventListener('click', function() {
+      currency += clickValue * permMultiplier;
+      updateCounter();
+    });
+
+    upgradeBtn.addEventListener('click', function() {
+      if (currency >= upgradeBtnCost) {
+        currency -= upgradeBtnCost;
+        upgradeBtnCost += 30;
+        permMultiplier += 1;
+        updateCounter();
+        msg.textContent = `Upgrade successful! Multiplier is now ${permMultiplier.toFixed(2)}x`;
+      } else {
+        msg.textContent = "Not enough currency for upgrade!";
+      }
+    });
+
+    luckBtn.addEventListener('click', function() {
+      if (currency >= luckBtnCost) {
+        currency -= luckBtnCost;
+        luckBtnCost += 500;
+        let rolled;
+        if (Math.random() < 0.02) {
+          rolled = 10 + Math.random() * 10;
+          msg.textContent = `🎉 RARE LUCK! +${rolled.toFixed(2)}x multiplier!`;
+        } else {
+          rolled = 0.1 + Math.random() * (3 - 0.1);
+          msg.textContent = `You gained a +${rolled.toFixed(2)}x multiplier.`;
+        }
+        permMultiplier += rolled;
+        updateCounter();
+      } else {
+        msg.textContent = "Not enough currency for luck boost!";
+      }
+    });
+
     updateCounter();
-  } else {
-    msg.textContent = "Not enough currency for luck boost!";
-  }
-});
-
-updateCounter();
-</script>
-
+  </script>
 </body>
 </html>
