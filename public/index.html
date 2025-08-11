@@ -1,180 +1,248 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Mobile Friendly Chat App</title>
-<style>
-  * {
-    box-sizing: border-box;
-  }
-  body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #121212;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    padding: 1rem;
-  }
-  #loginScreen {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  #loginScreen input {
-    width: 90%;
-    max-width: 300px;
-    margin: 0.5rem 0;
-    padding: 12px;
-    font-size: 1.2rem;
-    border-radius: 8px;
-    border: none;
-  }
-  #loginScreen button {
-    width: 90%;
-    max-width: 300px;
-    padding: 12px;
-    font-size: 1.2rem;
-    background: #6200ee;
-    border: none;
-    border-radius: 8px;
-    color: white;
-    cursor: pointer;
-  }
-  #loginScreen button:hover {
-    background: #3700b3;
-  }
-  #app {
-    display: none;
-    flex-direction: column;
-    flex: 1;
-  }
-  #menu {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 1rem;
-  }
-  #menu button {
-    flex: 1;
-    margin: 0 0.25rem;
-    padding: 12px 0;
-    font-size: 1.1rem;
-    background: #1f1f1f;
-    border: none;
-    border-radius: 10px;
-    color: #eee;
-    cursor: pointer;
-  }
-  #menu button.active {
-    background: #6200ee;
-  }
-  section {
-    flex: 1;
-    display: none;
-    background: #222;
-    border-radius: 10px;
-    padding: 1rem;
-    overflow-y: auto;
-  }
-  section.active {
-    display: block;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mobile Chat App</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #121212;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+      padding: 10px;
+    }
+    /* Menu */
+    #menu {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 15px;
+    }
+    #menu button {
+      flex: 1;
+      padding: 12px 0;
+      font-size: 1.1rem;
+      background: #1e1e1e;
+      border: none;
+      border-radius: 8px;
+      color: #bbb;
+      cursor: pointer;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    #menu button.active {
+      background: #6200ee;
+      color: white;
+      font-weight: bold;
+      cursor: default;
+    }
+    /* Sections */
+    section {
+      display: none;
+      width: 100%;
+      max-width: 480px;
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 15px;
+      box-shadow: 0 0 10px #6200eeaa;
+      flex-grow: 1;
+      overflow-y: auto;
+      max-height: 70vh;
+    }
+    section.active {
+      display: block;
+    }
+    h2 {
+      margin-top: 0;
+      text-align: center;
+      color: #bb86fc;
+      font-weight: 700;
+    }
+
+    /* Chat */
+    #chat #messages {
+      height: 250px;
+      overflow-y: auto;
+      background: #121212;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+    #chat #messages div {
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
+    #chat form {
+      display: flex;
+      gap: 10px;
+    }
+    #chat input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #222;
+      color: #eee;
+      font-size: 1rem;
+    }
+    #chat button {
+      background: #6200ee;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    #chat button:hover {
+      background: #7e3ff2;
+    }
+
+    /* Pictures */
+    #pictures p {
+      text-align: center;
+      font-size: 1rem;
+      color: #ccc;
+    }
+
+    /* Settings */
+    #settings label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #bb86fc;
+    }
+    #settings input[type="file"] {
+      display: block;
+      margin-bottom: 10px;
+      width: 100%;
+      color: #eee;
+    }
+    #profilePreview {
+      max-width: 100%;
+      max-height: 180px;
+      border-radius: 12px;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid #6200ee;
+    }
+
+    /* Vote */
+    #vote p {
+      text-align: center;
+      font-size: 1rem;
+      color: #ccc;
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      #menu button {
+        font-size: 1rem;
+        padding: 10px 0;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- Login Screen -->
-<div id="loginScreen">
-  <h2>Login</h2>
-  <input type="text" id="username" placeholder="Username" />
-  <input type="password" id="password" placeholder="Password" />
-  <button id="loginBtn">Login</button>
-  <p id="loginError" style="color: #f44336;"></p>
-</div>
-
-<!-- Main App -->
-<div id="app">
   <div id="menu">
-    <button data-section="chat" class="active">Chat</button>
+    <button class="active" data-section="chat">Chat</button>
     <button data-section="pictures">Pictures</button>
-    <button data-section="votes">Votes</button>
     <button data-section="settings">Settings</button>
+    <button data-section="vote">Vote</button>
   </div>
 
   <section id="chat" class="active">
-    <h3>Chat Room</h3>
-    <!-- Chat content here -->
-    <p>Your chat box here...</p>
+    <h2>Chat Room</h2>
+    <div id="messages"></div>
+    <form id="messageForm">
+      <input type="text" id="messageInput" autocomplete="off" placeholder="Type a message..." />
+      <button type="submit">Send</button>
+    </form>
   </section>
 
   <section id="pictures">
-    <h3>Pictures</h3>
-    <!-- Picture posting content -->
-    <p>Picture posting area here...</p>
-  </section>
-
-  <section id="votes">
-    <h3>Votes</h3>
-    <!-- Voting system content -->
-    <p>Voting system here...</p>
+    <h2>Pictures</h2>
+    <p>Upload and view pictures here (coming soon).</p>
   </section>
 
   <section id="settings">
-    <h3>Settings</h3>
-    <!-- Settings content -->
-    <p>Settings including profile picture upload here...</p>
+    <h2>Settings</h2>
+    <label for="profilePicInput">Upload Profile Picture:</label>
+    <input type="file" id="profilePicInput" accept="image/*" />
+    <img id="profilePreview" alt="Profile Preview" />
   </section>
-</div>
 
-<script>
-  const loginScreen = document.getElementById('loginScreen');
-  const app = document.getElementById('app');
-  const loginBtn = document.getElementById('loginBtn');
-  const loginError = document.getElementById('loginError');
+  <section id="vote">
+    <h2>Vote System</h2>
+    <p>Voting feature coming soon.</p>
+  </section>
 
-  const users = {
-    'Raen': '0000',
-    'Kova': '0000',
-    'Tissid': '51area51',
-    'Aare': '2008'
-  };
+  <script>
+    // Menu toggle
+    const buttons = document.querySelectorAll('#menu button');
+    const sections = document.querySelectorAll('section');
 
-  loginBtn.onclick = () => {
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Remove active from all buttons and sections
+        buttons.forEach(b => b.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
 
-    if (users[username] && users[username] === password) {
-      loginScreen.style.display = 'none';
-      app.style.display = 'flex';
-      document.querySelector('#menu button.active').click(); // Show first section
-    } else {
-      loginError.textContent = 'Invalid username or password.';
-    }
-  };
-
-  // Menu button switching
-  const menuButtons = document.querySelectorAll('#menu button');
-  const sections = document.querySelectorAll('section');
-
-  menuButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Remove active from all buttons
-      menuButtons.forEach(btn => btn.classList.remove('active'));
-      // Add active to clicked button
-      button.classList.add('active');
-
-      // Hide all sections
-      sections.forEach(section => section.classList.remove('active'));
-      // Show the selected section
-      const sectionId = button.dataset.section;
-      document.getElementById(sectionId).classList.add('active');
+        // Add active to clicked button and corresponding section
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.section).classList.add('active');
+      });
     });
-  });
-</script>
+
+    // Chat logic (no socket, demo only)
+    const messagesDiv = document.getElementById('messages');
+    const form = document.getElementById('messageForm');
+    const input = document.getElementById('messageInput');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      if (input.value.trim()) {
+        const msgDiv = document.createElement('div');
+        msgDiv.textContent = `You: ${input.value.trim()}`;
+        messagesDiv.appendChild(msgDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        input.value = '';
+      }
+    });
+
+    // Profile picture preview
+    const profileInput = document.getElementById('profilePicInput');
+    const profilePreview = document.getElementById('profilePreview');
+
+    profileInput.addEventListener('change', () => {
+      const file = profileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          profilePreview.src = e.target.result;
+          profilePreview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      } else {
+        profilePreview.src = '';
+        profilePreview.style.display = 'none';
+      }
+    });
+  </script>
 
 </body>
 </html>
