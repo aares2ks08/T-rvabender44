@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mobile Friendly Chat App Menu</title>
+  <title>Login + Mobile Friendly Menu</title>
   <style>
-    /* Reset & base */
+    /* Base & reset */
     * {
       box-sizing: border-box;
     }
-    body {
-      margin: 0;
+    body, html {
+      margin: 0; padding: 0; height: 100%;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
         Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
       background-color: #121212;
@@ -18,6 +18,66 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+    }
+
+    /* Login modal container */
+    #loginModal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #loginBox {
+      background: #222;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 320px;
+      box-shadow: 0 0 16px #3b6df3;
+      text-align: center;
+    }
+
+    #loginBox h2 {
+      margin-bottom: 1rem;
+      color: #3b6df3;
+    }
+
+    #loginBox input[type="text"],
+    #loginBox input[type="password"] {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      margin: 0.5rem 0 1rem 0;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    #loginBox button {
+      width: 100%;
+      padding: 0.8rem;
+      background-color: #3b6df3;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
+    }
+    #loginBox button:hover {
+      background-color: #2a52c4;
+    }
+
+    #loginError {
+      color: #ff5555;
+      min-height: 1.3rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
     }
 
     /* Header menu */
@@ -29,8 +89,9 @@
       background-color: #1e1e1e;
       border-radius: 10px 10px 0 0;
       box-shadow: inset 0 -2px 5px rgba(0,0,0,0.8);
-      flex-wrap: wrap;   /* ALLOW BUTTON WRAPPING */
+      flex-wrap: wrap;
       user-select: none;
+      display: none; /* hidden until login */
     }
 
     header button {
@@ -64,7 +125,7 @@
       }
     }
 
-    /* Sections */
+    /* Main content */
     main {
       flex-grow: 1;
       padding: 1rem;
@@ -72,24 +133,22 @@
       border-radius: 0 0 10px 10px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.7);
       overflow-y: auto;
+      display: none; /* hidden until login */
     }
 
     section {
       display: none;
       animation: fadeIn 0.3s ease forwards;
     }
-
     section.active {
       display: block;
     }
 
-    /* Fade in animation for sections */
     @keyframes fadeIn {
       from {opacity: 0;}
       to {opacity: 1;}
     }
 
-    /* Sample content styling */
     h2 {
       margin-top: 0;
       margin-bottom: 1rem;
@@ -99,7 +158,7 @@
       text-align: center;
     }
 
-    /* Chat box styling */
+    /* Chat styles */
     #chat #messages {
       height: 300px;
       background: #222;
@@ -137,17 +196,29 @@
       background-color: #2a52c4;
     }
 
-    /* Other sections content */
+    /* Placeholder style */
     .content-placeholder {
       text-align: center;
       font-size: 1.2rem;
       color: #bbb;
       margin-top: 2rem;
     }
-
   </style>
 </head>
 <body>
+
+  <!-- Login Modal -->
+  <div id="loginModal">
+    <div id="loginBox">
+      <h2>Login</h2>
+      <div id="loginError"></div>
+      <input type="text" id="username" placeholder="Username" autocomplete="username" />
+      <input type="password" id="password" placeholder="Password" autocomplete="current-password" />
+      <button id="loginBtn">Log In</button>
+    </div>
+  </div>
+
+  <!-- Menu -->
   <header>
     <button class="active" data-section="chat">Chat Room</button>
     <button data-section="pictures">Pictures</button>
@@ -155,8 +226,117 @@
     <button data-section="votes">Vote System</button>
   </header>
 
+  <!-- Pages -->
   <main>
     <section id="chat" class="active">
       <h2>Chat Room</h2>
       <div id="messages">Welcome to the chat! Say hi 👋</div>
-      <form
+      <form id="messageForm">
+        <input id="messageInput" type="text" autocomplete="off" placeholder="Type your message..." />
+        <button type="submit">Send</button>
+      </form>
+    </section>
+
+    <section id="pictures">
+      <h2>Pictures</h2>
+      <div class="content-placeholder">
+        Here users can upload and view pictures.<br />
+        (This area will hold picture posting UI.)
+      </div>
+    </section>
+
+    <section id="settings">
+      <h2>Settings</h2>
+      <div class="content-placeholder">
+        Settings options will appear here.
+      </div>
+    </section>
+
+    <section id="votes">
+      <h2>Vote System</h2>
+      <div class="content-placeholder">
+        Users can participate in votes here.
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Hardcoded users for demo
+    const users = {
+      'Raen': '0000',
+      'Kova': '0000',
+      'Tissid': '51area51'
+    };
+
+    const loginModal = document.getElementById('loginModal');
+    const loginBtn = document.getElementById('loginBtn');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const loginError = document.getElementById('loginError');
+
+    const header = document.querySelector('header');
+    const main = document.querySelector('main');
+
+    loginBtn.addEventListener('click', () => {
+      const user = usernameInput.value.trim();
+      const pass = passwordInput.value.trim();
+      if (!user || !pass) {
+        loginError.textContent = "Please enter username and password.";
+        return;
+      }
+      if (users[user] && users[user] === pass) {
+        // Login success
+        loginError.textContent = "";
+        loginModal.style.display = 'none';
+        header.style.display = 'flex';
+        main.style.display = 'block';
+        usernameInput.value = '';
+        passwordInput.value = '';
+        usernameInput.blur();
+        passwordInput.blur();
+      } else {
+        loginError.textContent = "Invalid username or password.";
+      }
+    });
+
+    // Allow Enter key to submit login
+    [usernameInput, passwordInput].forEach(input => {
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          loginBtn.click();
+        }
+      });
+    });
+
+    // Menu toggle
+    const buttons = document.querySelectorAll('header button');
+    const sections = document.querySelectorAll('main section');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        const targetId = btn.getAttribute('data-section');
+        document.getElementById(targetId).classList.add('active');
+      });
+    });
+
+    // Simple chat message functionality
+    const form = document.getElementById('messageForm');
+    const input = document.getElementById('messageInput');
+    const messages = document.getElementById('messages');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const msg = input.value.trim();
+      if (!msg) return;
+      const newMsg = document.createElement('div');
+      newMsg.textContent = `You: ${msg}`;
+      messages.appendChild(newMsg);
+      messages.scrollTop = messages.scrollHeight;
+      input.value = '';
+    });
+  </script>
+</body>
+</html>
