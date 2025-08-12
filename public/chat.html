@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Digital Store</title>
+</head>
+<body>
+  <h1>Welcome to My Digital Store</h1>
+  
+  <div class="product">
+    <h2>Awesome E-book</h2>
+    <p>Price: $10</p>
+    <!-- PayPal Buy Button -->
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+      <input type="hidden" name="cmd" value="_xclick">
+      <input type="hidden" name="business" value="YOUR_PAYPAL_EMAIL@example.com">
+      <input type="hidden" name="item_name" value="Awesome E-book">
+      <input type="hidden" name="amount" value="10.00">
+      <input type="hidden" name="currency_code" value="USD">
+      <input type="submit" value="Buy Now">
+    </form>
+  </div>
+
+</body>
+</html>
