@@ -2,22 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cookie Clicker 🍪</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background: #f3e5ab;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
-    .menu {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      text-align: center;
-    }
-    button {
-      padding: 15px 40px
+  <title>Cookie Clicker Menu 🍪</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="menu">
+    <button id="play">▶ Play</button>
+    <button id="options">⚙ Options</button>
+    <button id="quit">❌ Quit</button>
+  </div>
+
+  <script>
+    document.getElementById("play").addEventListener("click", () => {
+      window.location.href = "/game.html";
+    });
+
+    document.getElementById("options").addEventListener("click", () => {
+      alert("Options menu coming soon!");
+    });
+
+    document.getElementById("quit").addEventListener("click", () => {
+      alert("Quit button pressed (can’t fully close browser tab).");
+    });
+  </script>
+</body>
+</html>
