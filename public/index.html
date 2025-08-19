@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Clicker 🍪</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🍪 Cookie Clicker</h1>
+  <img id="cookie" src="https://upload.wikimedia.org/wikipedia/commons/6/69/Chocolate_Chip_Cookie.png" alt="cookie">
+  <div id="score">Score: 0</div>
+  <br>
+  <button onclick="window.location.href='/'">⬅ Back to Menu</button>
+
+  <script>
+    async function updateScore() {
+      const res = await fetch("/score");
+      const data = await res.json();
+      document.getElementById("score").innerText = "Score: " + data.score;
+    }
+
+    async function clickCookie() {
+      const res = await fetch("/click");
+      const data = await res.json();
+      document.getElementById("score").innerText = "Score: " + data.score;
+    }
+
+    document.getElementById("cookie").addEventListener("click", clickCookie);
+    updateScore();
+  </script>
+</body>
+</html>
