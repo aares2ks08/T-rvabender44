@@ -11,7 +11,7 @@ app.use(express.static(path.join(__dirname, "public"))); // serve frontend files
 
 // Endpoint: get current score
 app.get("/score", (req, res) => {
-  let score = parseInt(req.cies.score || "0");
+  let score = parseInt(req.cookies.score || "0");
   res.json({ score });
 });
 
